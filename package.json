@@ -1,0 +1,42 @@
+{
+    "name": "account",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon index.js"
+    },
+    "dependencies": {
+        "account": "file:",
+        "bcrypt": "^5.1.1",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^16.4.7",
+        "ejs": "^3.1.10",
+        "express": "^4.21.1",
+        "express-ejs-layouts": "^2.5.1",
+        "express-flash": "^0.0.2",
+        "express-session": "^1.18.1",
+        "html-pdf": "^3.0.1",
+        "json2csv": "^6.0.0-alpha.2",
+        "jsonwebtoken": "^9.0.2",
+        "moment": "^2.30.1",
+        "mongoose": "^8.8.3",
+        "nodemailer": "^6.9.16",
+        "nodemon": "^3.1.7",
+        "passport": "^0.7.0",
+        "passport-local": "^1.0.0",
+        "path": "^0.12.7",
+        "socket.io": "^4.8.1",
+        "socket.io-client": "^4.8.1",
+        "url": "^0.11.4",
+        "uuid": "^11.0.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.26.4",
+        "@babel/core": "^7.26.0",
+        "@babel/node": "^7.26.0",
+        "@babel/preset-env": "^7.26.0"
+    }
+}
