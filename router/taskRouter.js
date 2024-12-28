@@ -8,7 +8,8 @@ import {
    searchTasksByTitle,
    filterTasksByStatus,
    exportTasksToCSV,
-   exportTasksToPDF,getAllTaskAndCheckList
+   exportTasksToPDF,
+   getAllTaskAndCheckList,
 } from "../controller/taskController.js";
 const router = express.Router();
 

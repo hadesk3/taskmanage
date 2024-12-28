@@ -10,7 +10,7 @@ const taskSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: false },
     deadline: { type: Date, required: true },
-    status: { type: String, enum: ['Pending', 'In Progress', 'Done'], default :"Pending"}
+    status: { type: String, enum: [, 'In Progress', 'Done'], default :"In Progress"}
 });
 const Task = mongoose.model('Task', taskSchema);
 
