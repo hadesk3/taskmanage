@@ -50,10 +50,8 @@ async function getRecentAlerts(userId) {
     }
 
     const data = await response.json();
-    console.log("data alert =", data);  // Log the response to check its structure
+    console.log("data alert =", data);  
 
-    // Kiểm tra dữ liệu đã nhận được từ API
-    // Call the function to update notifications with fetched data
     updateNotifications(data.alerts,  data.unreadCount);
   } catch (error) {
     console.error('Error fetching recent alerts:', error);
@@ -70,31 +68,53 @@ function updateNotifications(alerts, unreadCount) {
   
   alerts.forEach(alertData => {
     // Format the deadline into a readable format
-    const formattedDeadline = new Date(alertData.taskDeadline).toLocaleString();
-
-    // Create a new notification element
-    const newNotification = document.createElement('a');
+    const isSpecialUser  = '67615bffb7decdd52980f1ce';
+    let newNotification = document.createElement('a');
     newNotification.href = '#';
     newNotification.classList.add('iq-sub-card');
 
-    // Update the content of the new notification with task information
-    newNotification.innerHTML = `
-      <div class="media align-items-center cust-card py-3 border-bottom">
-        <div class="">
-          <img class="avatar-50 rounded-small" src="${alertData.userImage || '/images/user/01.jpg'}" alt="user-img" />
-        </div>
-        <div class="media-body ml-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <h6 class="mb-0">Admin</h6>
-            <small class="text-dark"><b>${new Date(alertData.timestamp).toLocaleTimeString()}</b></small>
+    if (isSpecialUser) {
+      // HTML cho user đặc biệt
+      newNotification.innerHTML = `
+        <div class="media align-items-center cust-card py-3 border-bottom special-alert">
+          <div class="">
+            <img class="avatar-50 rounded-small" src="${alertData.userImage || '/images/user/01.jpg'}" alt="user-img" />
           </div>
-          <small class="mb-0">
-            <strong>Task:</strong> ${alertData.task_id.title} <br />
-            <strong>Deadline:</strong> ${alertData.task_id.deadline}
-          </small>
+          <div class="media-body ml-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <h6 class="mb-0 text-danger">Admin (Special)</h6>
+              <small class="text-dark"><b>${new Date(alertData.timestamp).toLocaleTimeString()}</b></small>
+            </div>
+            <small class="mb-0">
+              <strong>Task:</strong> ${alertData.task_id.title} <br />
+              <strong>Alert Type:</strong> ${alertData.alert_type} <br />
+              <strong>Reason:</strong> ${alertData.reason || 'N/A'} <br />
+              <strong>Extend Until:</strong> ${alertData.date_extend ? new Date(alertData.date_extend).toLocaleDateString() : 'N/A'} <br />
+              <strong>From:</strong> ${alertData.user || 'Unknown'}
+            </small>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      // HTML mặc định cho các user khác
+      newNotification.innerHTML = `
+        <div class="media align-items-center cust-card py-3 border-bottom">
+          <div class="">
+            <img class="avatar-50 rounded-small" src="${alertData.userImage || '/images/user/01.jpg'}" alt="user-img" />
+          </div>
+          <div class="media-body ml-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <h6 class="mb-0">Admin</h6>
+              <small class="text-dark"><b>${new Date(alertData.timestamp).toLocaleTimeString()}</b></small>
+            </div>
+            <small class="mb-0">
+              <strong>Task:</strong> ${alertData.task_id.title} <br />
+              <strong>Deadline:</strong> ${alertData.task_id.deadline}
+            </small>
+          </div>
+        </div>
+      `;
+    }
 
     // Add the new notification to the list
     notificationList.appendChild(newNotification);

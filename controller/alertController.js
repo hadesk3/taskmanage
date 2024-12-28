@@ -96,4 +96,26 @@ export const getAlertsByUserId = async (req, res) => {
 };
 
 
+export const createExtendTime = async (req, res) => {
+  try {
+      const { task_id, alert_type, reason, date_extend, sent_to,user } = req.body;
+
+      const alert = new Alert({
+          task_id,
+          alert_type,
+          reason,
+          date_extend,
+          sent_to,
+          user 
+      });
+
+      await alert.save();
+      res.status(200).json({ message: 'Extend request sent!' });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Failed to create alert' });
+  }
+};
+
+
 

@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 });
 
 // Khởi động server Express và WebSocket
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080 
 server.listen(port, () => {
     console.log(`Server đang chạy tại http://localhost:${port}`);
 });
@@ -114,6 +114,27 @@ app.post('/assign-task', async (req, res) => {
         // Kiểm tra và chuyển assigned_to thành chuỗi nếu cần
         const assignedToString = assigned_to ? assigned_to.toString() : '';
         
+        // Gửi thông báo tới người dùng
+        io.to(assignedToString).emit('newTaskAssigned', {
+            message: 'You have been assigned a new task!'
+        });
+
+        console.log(`Notification sent to user ${assignedToString}`);
+
+        res.status(200).json({ message: 'Task assigned and notification sent successfully!' });
+    } catch (error) {
+        console.error("Error assigning task:", error);
+        res.status(500).json({ message: 'There was an error assigning the task.' });
+    }
+});
+
+
+app.get('/extend-time', async (req, res) => {
+    // Lấy assigned_to từ req.body, đảm bảo rằng nó là một chuỗi
+
+    try {
+        // Kiểm tra và chuyển assigned_to thành chuỗi nếu cần
+        const assignedToString = '67615bffb7decdd52980f1ce'
         // Gửi thông báo tới người dùng
         io.to(assignedToString).emit('newTaskAssigned', {
             message: 'You have been assigned a new task!'

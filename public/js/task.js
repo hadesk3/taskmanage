@@ -1,3 +1,5 @@
+
+
 function fetchUserTasks(userId) {
     fetch(`http://localhost:3000/api/tasks/getAllTaskAndCheckList/${userId}`)
         .then((response) => {
@@ -31,50 +33,57 @@ function fetchUserTasks(userId) {
                 `).join('');
 
                 const taskCard = `
-                    <div class="card card-widget task-card">
-                        <div class="card-body">
-                            <div class="d-flex flex-wrap align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <div class="custom-control custom-task custom-checkbox custom-control-inline">
-                                        <input type="checkbox" class="custom-control-input" id="task${task._id}" ${task.status === 'Done' ? 'checked' : ''}>
-                                        <label class="custom-control-label" for="task${task._id}"></label>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-2">
-                                            ${task.title} (Deadline ${new Date(task.deadline).toLocaleDateString()})
-                                        </h5>
-                                        <p class="text-muted">${task.description || 'No description'}</p>
-                                    </div>
+                <div class="card card-widget task-card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div class="custom-control custom-task custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input" id="task${task._id}" ${task.status === 'Done' ? 'checked' : ''}>
+                                    <label class="custom-control-label" for="task${task._id}"></label>
                                 </div>
-                                <div class="media align-items-center mt-md-0 mt-3">
-                                    <a href="#" class="btn bg-secondary-light mr-3">Extend time</a>
-                                    <a class="btn bg-secondary-light" data-toggle="collapse" href="#collapseEdit${index}" role="button" aria-expanded="false" aria-controls="collapseEdit${index}">
-                                        <i class="ri-edit-box-line m-0"></i>
-                                    </a>
+                                <div>
+                                    <h5 class="mb-2">
+                                        ${task.title} (Deadline ${new Date(task.deadline).toLocaleDateString()})
+                                    </h5>
+                                    <p class="text-muted">${task.description || 'No description'}</p>
                                 </div>
+                            </div>
+                            <div class="media align-items-center mt-md-0 mt-3">
+                                <a href="#" class="btn bg-secondary-light mr-3" onclick="openExtendModal('${task._id}', '${task.title}')">Extend time</a>
+                                <a class="btn bg-secondary-light" data-toggle="collapse" href="#collapseEdit${index}" role="button" aria-expanded="false" aria-controls="collapseEdit${index}">
+                                    <i class="ri-edit-box-line m-0"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="collapse" id="collapseEdit${index}">
-                        <div class="card card-list task-card">
-                            <div class="card-header d-flex align-items-center justify-content-between px-0 mx-3">
-                                <div class="header-title">
-                                    <div class="custom-control custom-checkbox custom-control-inline">
-                                        <input type="checkbox" class="custom-control-input" id="done${task._id}">
-                                        <label class="custom-control-label h5" for="done${task._id}">
-                                            Mark as done
-                                        </label>
-                                    </div>
-                                </div>
+                </div>
+            
+                <!-- Modal -->
+                <div class="modal fade" id="extendModal${task._id}" tabindex="-1" role="dialog" aria-labelledby="extendModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="extendModalLabel">Extend Task: ${task.title}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="card-body">
-                                <h5>Description</h5>
-                                <p>${task.description || 'No description'}</p>
-                                <h5>Checklist</h5>
-                                <div class="row">${checklistHtml}</div>
+                            <div class="modal-body">
+                                <form id="extendForm${task._id}">
+                                    <div class="form-group">
+                                        <label for="reason">Reason for extend</label>
+                                        <textarea class="form-control" id="reason${task._id}" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dateExtend">Extend date</label>
+                                        <input type="date" class="form-control" id="dateExtend${task._id}">
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="submitExtend('${task._id}')">Submit</button>
+                                </form>
                             </div>
                         </div>
-                    </div>`;
+                    </div>
+                </div>`;
 
                 taskContainer.insertAdjacentHTML('beforeend', taskCard);
             });
@@ -92,3 +101,6 @@ function getCookie(name) {
 
 const userId = getCookie('userId');
 fetchUserTasks(userId);
+
+
+
