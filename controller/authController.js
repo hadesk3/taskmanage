@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import moment from "moment";
 
 export const register = async (req, res) => {
-    const { name, email, phone, address } = req.body;
+    const { name, email, phone, address, avatar } = req.body;
     const username = email.split("@")[0];
 
     const checkEmailExist = await User.find({ email: email });
@@ -29,6 +29,7 @@ export const register = async (req, res) => {
         status: "active",
         phone: phone,
         address: address,
+        avatar: avatar,
         createdAt: moment().format("MM/DD/YYYY, hh:mm:ss"),
     });
 
@@ -100,7 +101,7 @@ passport.deserializeUser(async (id, done) => {
 export const postLogin = (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
         res.clearCookie("token");
-        res.clearCookie("userId"); 
+        res.clearCookie("userId");
         if (err) {
             return next(err);
         }
@@ -111,7 +112,9 @@ export const postLogin = (req, res, next) => {
         req.logIn(user, (err) => {
             if (err) return next(err);
             res.cookie("token", info.token, { maxAge: 24 * 60 * 60 * 1000 });
-            res.cookie("userId", user._id.toString(), { maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie("userId", user._id.toString(), {
+                maxAge: 24 * 60 * 60 * 1000,
+            });
             const data = user;
 
             data.password = undefined;
@@ -125,7 +128,7 @@ export const logout = (req, res, next) => {
         req.logout(function (err) {
             if (err) return next(err);
             res.clearCookie("token");
-            res.clearCookie("userId"); 
+            res.clearCookie("userId");
 
             res.redirect("/auth/login");
         });

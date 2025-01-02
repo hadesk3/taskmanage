@@ -58,3 +58,11 @@ export const getUserEditProfile = (req, res) => {
         page: "lecturer-profile-edit",
     });
 };
+
+export const getAddUserPage = (req, res) => {
+    const title = "Add User";
+    res.render("lecturer/user-add", {
+        title: title,
+        page: "lecturer/add",
+    });
+};

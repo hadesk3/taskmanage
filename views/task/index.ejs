@@ -31,7 +31,6 @@
         />
     </head>
     <body class="  ">
-
         <!-- loader Start -->
         <div id="loading">
             <div id="loading-center"></div>
@@ -112,797 +111,480 @@
                             </div>
                         </div>
                         <!-- task-->
-                      
-                    <!-- Page end  -->
-                </div>
-            </div>
-        </div>
-        <!-- Wrapper End-->
 
-        <!-- Modal list start -->
-        <div
-            class="modal fade"
-            role="dialog"
-            aria-modal="true"
-            id="new-project-modal"
-        >
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div
-                        class="modal-header d-block text-center pb-3 border-bttom"
-                    >
-                        <h3 class="modal-title" id="exampleModalCenterTitle01">
-                            New Project
-                        </h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText01" class="h5"
-                                        >Project Name*</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText01"
-                                        placeholder="Project Name"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Categories *</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Category</option>
-                                        <option>Android</option>
-                                        <option>IOS</option>
-                                        <option>Ui/Ux Design</option>
-                                        <option>Development</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText004" class="h5"
-                                        >Due Dates*</label
-                                    >
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="exampleInputText004"
-                                        value=""
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText07" class="h5"
-                                        >Assign Members*</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText07"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div
-                                    class="d-flex flex-wrap align-items-ceter justify-content-center mt-2"
-                                >
-                                    <div
-                                        class="btn btn-primary mr-3"
-                                        data-dismiss="modal"
-                                    >
-                                        Save
-                                    </div>
-                                    <div
-                                        class="btn btn-primary"
-                                        data-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Page end  -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div
-            class="modal fade bd-example-modal-lg"
-            role="dialog"
-            aria-modal="true"
-            id="new-task-modal"
-        >
-            <div
-                class="modal-dialog modal-dialog-centered modal-lg"
-                role="document"
-            >
-                <div class="modal-content">
-                    <div
-                        class="modal-header d-block text-center pb-3 border-bttom"
-                    >
-                        <h3 class="modal-title" id="exampleModalCenterTitle">
-                            New Task
-                        </h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12"> 
-                                <div class="form-group mb-3"> 
-                                    <label for="project" class="h5">Project Name</label> 
-                                    <select class="form-control" id="projectDropdown" onchange="fetchProjectMembers()"> 
-                                        <option value="">Select Project</option>
-                                     </select> 
-                                    </div> 
-                                </div>
-                            
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText02" class="h5"
-                                        >Task Name</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText02"
-                                        placeholder="Enter task Name"
-                                    />
-                                    <a href="#" class="task-edit text-body"
-                                        ><i class="ri-edit-box-line"></i
-                                    ></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-4"> <div class="form-group mb-3"> 
-                                <label for="membersDropdown" class="h5">Assigned to</label> 
-                                <select name="type" class="form-control" data-style="py-0" id="membersDropdown">
-                                     <option value="">Members</option> 
-                                    </select> 
-                                </div> 
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText05" class="h5"
-                                        >Due Dates*</label
-                                    >
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="exampleInputText05"
-                                        value=""
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Category</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Design</option>
-                                        <option>Android</option>
-                                        <option>IOS</option>
-                                        <option>Ui/Ux Design</option>
-                                        <option>Development</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText040" class="h5"
-                                        >Description</label
-                                    >
-                                    <textarea
-                                        class="form-control"
-                                        id="exampleInputText040"
-                                        rows="2"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText005" class="h5"
-                                        >Checklist</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText005"
-                                        placeholder="Add List"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-0">
-                                    <label for="exampleInputText01" class="h5"
-                                        >Attachments</label
-                                    >
-                                    <div class="custom-file">
-                                        <input
-                                            type="file"
-                                            class="custom-file-input"
-                                            id="inputGroupFile003"
-                                        />
-                                        <label
-                                            class="custom-file-label"
-                                            for="inputGroupFile003"
-                                            >Upload media</label
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div
-                                    class="d-flex flex-wrap align-items-ceter justify-content-center mt-4"
-                                >
-                                    <div
-                                        class="btn btn-primary mr-3"
-                                        data-dismiss="modal"
-                                        onclick ="createTask()"
-                                    >
-                                        Save
-                                    </div>
-                                    <div
-                                        class="btn btn-primary"
-                                        data-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div
-            class="modal fade bd-example-modal-lg"
-            role="dialog"
-            aria-modal="true"
-            id="new-user-modal"
-        >
-            <div
-                class="modal-dialog modal-dialog-centered modal-lg"
-                role="document"
-            >
-                <div class="modal-content">
-                    <div
-                        class="modal-header d-block text-center pb-3 border-bttom"
-                    >
-                        <h3 class="modal-title" id="exampleModalCenterTitle02">
-                            New User
-                        </h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3 custom-file-small">
-                                    <label for="exampleInputText01" class="h5"
-                                        >Upload Profile Picture</label
-                                    >
-                                    <div class="custom-file">
-                                        <input
-                                            type="file"
-                                            class="custom-file-input"
-                                            id="inputGroupFile02"
-                                        />
-                                        <label
-                                            class="custom-file-label"
-                                            for="inputGroupFile02"
-                                            >Choose file</label
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Full Name</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText2"
-                                        placeholder="Enter your full name"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText04" class="h5"
-                                        >Phone Number</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText04"
-                                        placeholder="Enter phone number"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText006" class="h5"
-                                        >Email</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText006"
-                                        placeholder="Enter your Email"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Type</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Type</option>
-                                        <option>Trainee</option>
-                                        <option>Employee</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Role</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Role</option>
-                                        <option>Designer</option>
-                                        <option>Developer</option>
-                                        <option>Manager</option>
-                                        <option>BDE</option>
-                                        <option>SEO</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div
-                                    class="d-flex flex-wrap align-items-ceter justify-content-center mt-2"
-                                >
-                                    <div
-                                        class="btn btn-primary mr-3"
-                                        data-dismiss="modal"
-                                    >
-                                        Save
-                                    </div>
-                                    <div
-                                        class="btn btn-primary"
-                                        data-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div
-            class="modal fade bd-example-modal-lg"
-            role="dialog"
-            aria-modal="true"
-            id="new-create-modal"
-        >
-            <div
-                class="modal-dialog modal-dialog-centered modal-lg"
-                role="document"
-            >
-                <div class="modal-content">
-                    <div
-                        class="modal-header d-block text-center pb-3 border-bttom"
-                    >
-                        <h3 class="modal-title" id="exampleModalCenterTitle03">
-                            New Task
-                        </h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText03" class="h5"
-                                        >Task Name</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText03"
-                                        placeholder="Enter task Name"
-                                    />
-                                    <a href="#" class="task-edit text-body"
-                                        ><i class="ri-edit-box-line"></i
-                                    ></a>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Assigned to</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                       
-                                        <option>6766ea1083234ec10e77627a</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Project Name</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Enter your project Name</option>
-                                        <option>Ui/Ux Design</option>
-                                        <option>Dashboard Templates</option>
-                                        <option>Wordpress Themes</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText40" class="h5"
-                                        >Description</label
-                                    >
-                                    <textarea
-                                        class="form-control"
-                                        id="exampleInputText40"
-                                        rows="2"
-                                        placeholder="Textarea"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText8" class="h5"
-                                        >Checklist</label
-                                    >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="exampleInputText8"
-                                        placeholder="Add List"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group mb-0">
-                                    <label for="exampleInputText01" class="h5"
-                                        >Attachments</label
-                                    >
-                                    <div class="custom-file">
-                                        <input
-                                            type="file"
-                                            class="custom-file-input"
-                                            id="inputGroupFile01"
-                                        />
-                                        <label
-                                            class="custom-file-label"
-                                            for="inputGroupFile01"
-                                            >Upload media</label
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div
-                                    class="d-flex flex-wrap align-items-ceter justify-content-center mt-4"
-                                >
-                                    <div
-                                        class="btn btn-primary mr-3"
-                                        data-dismiss="modal"
-                                        
-                                    >
-                                        Save
-                                    </div>
-                                    <div
-                                        class="btn btn-primary"
-                                        data-dismiss="modal"
-                                    >
-                                        Cancel
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!-- Wrapper End-->
 
+            <!-- Modal list start -->
+            <div
+                class="modal fade bd-example-modal-lg"
+                role="dialog"
+                aria-modal="true"
+                id="new-task-modal"
+            >
+                <div
+                    class="modal-dialog modal-dialog-centered modal-lg"
+                    role="document"
+                >
+                    <div class="modal-content">
+                        <div
+                            class="modal-header d-block text-center pb-3 border-bttom"
+                        >
+                            <h3
+                                class="modal-title"
+                                id="exampleModalCenterTitle"
+                            >
+                                New Task
+                            </h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-3">
+                                        <label for="project" class="h5"
+                                            >Project Name</label
+                                        >
+                                        <select
+                                            class="form-control"
+                                            id="projectDropdown"
+                                            onchange="fetchProjectMembers()"
+                                        >
+                                            <option value="">
+                                                Select Project
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            for="exampleInputText02"
+                                            class="h5"
+                                            >Task Name</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="exampleInputText02"
+                                            placeholder="Enter task Name"
+                                        />
+                                        <a href="#" class="task-edit text-body"
+                                            ><i class="ri-edit-box-line"></i
+                                        ></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="membersDropdown" class="h5"
+                                            >Assigned to</label
+                                        >
+                                        <select
+                                            name="type"
+                                            class="form-control"
+                                            data-style="py-0"
+                                            id="membersDropdown"
+                                        >
+                                            <option value="">Members</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            for="exampleInputText05"
+                                            class="h5"
+                                            >Due Dates*</label
+                                        >
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            id="exampleInputText05"
+                                            value=""
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            for="exampleInputText2"
+                                            class="h5"
+                                            >Category</label
+                                        >
+                                        <select
+                                            name="type"
+                                            class="selectpicker form-control"
+                                            data-style="py-0"
+                                        >
+                                            <option>Design</option>
+                                            <option>Android</option>
+                                            <option>IOS</option>
+                                            <option>Ui/Ux Design</option>
+                                            <option>Development</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            for="exampleInputText040"
+                                            class="h5"
+                                            >Description</label
+                                        >
+                                        <textarea
+                                            class="form-control"
+                                            id="exampleInputText040"
+                                            rows="2"
+                                        ></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            for="exampleInputText005"
+                                            class="h5"
+                                            >Checklist</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="exampleInputText005"
+                                            placeholder="Add List"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-0">
+                                        <label
+                                            for="exampleInputText01"
+                                            class="h5"
+                                            >Attachments</label
+                                        >
+                                        <div class="custom-file">
+                                            <input
+                                                type="file"
+                                                class="custom-file-input"
+                                                id="inputGroupFile003"
+                                            />
+                                            <label
+                                                class="custom-file-label"
+                                                for="inputGroupFile003"
+                                                >Upload media</label
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div
+                                        class="d-flex flex-wrap align-items-ceter justify-content-center mt-4"
+                                    >
+                                        <div
+                                            class="btn btn-primary mr-3"
+                                            data-dismiss="modal"
+                                            onclick="createTask()"
+                                        >
+                                            Save
+                                        </div>
+                                        <div
+                                            class="btn btn-primary"
+                                            data-dismiss="modal"
+                                        >
+                                            Cancel
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
     <script type="module" src="/js/task.js"></script>
     <script>
-
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-// Get userId from cookies
-const userId = getCookie('userId')
-function openExtendModal(taskId, taskTitle) {
-        const modalId = `#extendModal${taskId}`;
-        $(modalId).modal('show');
-}   
-
-
-function submitExtend(taskId) {
-        const reason = document.querySelector(`#reason${taskId}`).value;
-        const dateExtend = document.querySelector(`#dateExtend${taskId}`).value;
-
-        if (!reason || !dateExtend) {
-            alert('Please fill in all fields.');
-            return;
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(";").shift();
         }
 
-        const payload = {
-            task_id: taskId,
-            reason,
-            date_extend: dateExtend,
-            alert_type: 'Extend',
-            sent_to: '67615bffb7decdd52980f1ce' ,
-            user : userId
-        };
+        // Get userId from cookies
+        const userId = getCookie("userId");
+        function openExtendModal(taskId, taskTitle) {
+            const modalId = `#extendModal${taskId}`;
+            $(modalId).modal("show");
+        }
 
-        fetch('http://localhost:3000/api/alerts/createExtend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to send extend request');
+        function submitExtend(taskId) {
+            const reason = document.querySelector(`#reason${taskId}`).value;
+            const dateExtend = document.querySelector(
+                `#dateExtend${taskId}`
+            ).value;
+
+            if (!reason || !dateExtend) {
+                alert("Please fill in all fields.");
+                return;
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Extend request sent:', data);
-            triggerAlert()
-            alert('Extend request sent successfully!');
-            $(`#extendModal${taskId}`).modal('hide');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error sending extend request.');
-        });
-function triggerAlert()
-{
-    fetch('http://localhost:3000/extend-time', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to send extend request');
+
+            const payload = {
+                task_id: taskId,
+                reason,
+                date_extend: dateExtend,
+                alert_type: "Extend",
+                sent_to: "67615bffb7decdd52980f1ce",
+                user: userId,
+            };
+
+            fetch("http://localhost:3000/api/alerts/createExtend", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to send extend request");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Extend request sent:", data);
+                    triggerAlert();
+                    alert("Extend request sent successfully!");
+                    $(`#extendModal${taskId}`).modal("hide");
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Error sending extend request.");
+                });
+            function triggerAlert() {
+                fetch("http://localhost:3000/extend-time", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Failed to send extend request");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("Send success:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Error sending get.");
+                    });
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Send success:', data);
-
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error sending get.');
-        });
-}
-    }
-
+        }
     </script>
     <script>
         function createTask() {
-            const projectDropdown = document.getElementById('projectDropdown'); 
+            const projectDropdown = document.getElementById("projectDropdown");
             const projectId = projectDropdown.value;
             // Lấy các giá trị từ form
-            const membersDropdown = document.getElementById('membersDropdown');
-            const taskName = document.getElementById('exampleInputText02').value; 
-            var assignedTo = membersDropdown.value ; 
-            const category = document.querySelector('select[name="type"]').value;               
-            const description = document.getElementById('exampleInputText040').value; // Mô tả công việc
-            const checklistInput = document.getElementById('exampleInputText005').value; 
-            const dueDate =  document.getElementById('exampleInputText05').value;
+            const membersDropdown = document.getElementById("membersDropdown");
+            const taskName =
+                document.getElementById("exampleInputText02").value;
+            var assignedTo = membersDropdown.value;
+            const category = document.querySelector(
+                'select[name="type"]'
+            ).value;
+            const description = document.getElementById(
+                "exampleInputText040"
+            ).value; // Mô tả công việc
+            const checklistInput = document.getElementById(
+                "exampleInputText005"
+            ).value;
+            const dueDate = document.getElementById("exampleInputText05").value;
             // Xử lý chuỗi checklist
-            const checklistItems = checklistInput.split(',').map(item => item.trim()); 
-            console.log("project id", projectId)
-            console.log("member id", assignedTo )
+            const checklistItems = checklistInput
+                .split(",")
+                .map((item) => item.trim());
+            console.log("project id", projectId);
+            console.log("member id", assignedTo);
 
             // Dữ liệu task
             const taskData = {
                 title: taskName,
-                assigned_to: assignedTo, 
+                assigned_to: assignedTo,
                 project_id: projectId, // Giả sử giá trị là ID người dùng
                 deadline: dueDate,
-                status: 'Deadline',  // Mặc định là Pending
+                status: "Deadline", // Mặc định là Pending
                 category: category,
-                description: description
+                description: description,
             };
-        
+
             // Gửi dữ liệu task đến server
-            fetch('http://localhost:3000/api/tasks', {
-                method: 'POST',
+            fetch("http://localhost:3000/api/tasks", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(taskData)
+                body: JSON.stringify(taskData),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Task creation response:', data); // In ra phản hồi từ server
-                if (data && data.newTask) {
-                    console.log("Task ID:", data.newTask._id);  // Truy cập vào _id của newTask
-                    createChecklists(data.newTask._id, checklistItems,assignedTo );  // Truyền task_id và các mục checklist
-                    assignTaskNotification(assignedTo);
-                    createAlert(data.newTask._id, assignedTo);
-                } else {
-                    alert('Failed to create task: ' + (data.message || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error creating task:', error);
-                alert('An error occurred while creating the task.');
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Task creation response:", data); // In ra phản hồi từ server
+                    if (data && data.newTask) {
+                        console.log("Task ID:", data.newTask._id); // Truy cập vào _id của newTask
+                        createChecklists(
+                            data.newTask._id,
+                            checklistItems,
+                            assignedTo
+                        ); // Truyền task_id và các mục checklist
+                        assignTaskNotification(assignedTo);
+                        createAlert(data.newTask._id, assignedTo);
+                    } else {
+                        alert(
+                            "Failed to create task: " +
+                                (data.message || "Unknown error")
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error creating task:", error);
+                    alert("An error occurred while creating the task.");
+                });
         }
-        
+
         function createChecklists(taskId, checklistItems, assignedTo) {
             // Lặp qua các checklist items và gửi từng item tới server
-            checklistItems.forEach(item => {
+            checklistItems.forEach((item) => {
                 const checklistData = {
                     task_id: taskId,
                     assigned_to: assignedTo, // Người được giao checklist item
                     item_name: item,
-                    is_completed: false 
+                    is_completed: false,
                 };
-        
+
                 // Gửi checklist data đến server
-                fetch('http://localhost:3000/api/checkLists', {
-                    method: 'POST',
+                fetch("http://localhost:3000/api/checkLists", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(checklistData)
+                    body: JSON.stringify(checklistData),
                 })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Checklist creation response:', data);
-                    if (data._id) {  // Kiểm tra xem có _id trong phản hồi không, nếu có thì thành công
-                        alert('Checklist item created successfully!');
-                    } else {
-                        alert('Failed to create checklist: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error creating checklist:', error);
-                    alert('An error occurred while creating the checklist.');
-                });
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("Checklist creation response:", data);
+                        if (data._id) {
+                            // Kiểm tra xem có _id trong phản hồi không, nếu có thì thành công
+                            alert("Checklist item created successfully!");
+                        } else {
+                            alert(
+                                "Failed to create checklist: " +
+                                    (data.message || "Unknown error")
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error creating checklist:", error);
+                        alert(
+                            "An error occurred while creating the checklist."
+                        );
+                    });
             });
         }
-        </script>
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
             fetchProjects();
         });
-    
+
         function fetchProjects() {
-            fetch('http://localhost:3000/api/projects')
-                .then(response => response.json())
-                .then(data => {
-                    const projectDropdown = document.getElementById('projectDropdown');
-                    data.forEach(project => {
-                        const option = document.createElement('option');
+            fetch("http://localhost:3000/api/projects")
+                .then((response) => response.json())
+                .then((data) => {
+                    const projectDropdown =
+                        document.getElementById("projectDropdown");
+                    data.forEach((project) => {
+                        const option = document.createElement("option");
                         option.value = project._id;
                         option.text = project.name;
                         projectDropdown.appendChild(option);
                     });
                 })
-                .catch(error => {
-                    console.error('Error fetching projects:', error);
+                .catch((error) => {
+                    console.error("Error fetching projects:", error);
                 });
         }
 
+        function fetchProjectMembers() {
+            const projectId = document.getElementById("projectDropdown").value;
+            console.log("id projetc = ", projectId);
+            if (!projectId) {
+                return;
+            }
+            fetch(`http://localhost:3000/api/projects/${projectId}/members`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const membersDropdown =
+                        document.getElementById("membersDropdown");
+                    membersDropdown.innerHTML = "";
+                    console.log(data);
+                    data.forEach((member) => {
+                        const option = document.createElement("option");
+                        option.value = member._id;
+                        option.text = member.name;
+                        membersDropdown.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching project members:", error);
+                });
+        }
 
-        function fetchProjectMembers() 
-        { 
-            const projectId = document.getElementById('projectDropdown').value;
-            console.log("id projetc = ", projectId)
-             if (!projectId) { return; } 
-             fetch(`http://localhost:3000/api/projects/${projectId}/members`) 
-             .then(response => response.json()) 
-             .then(data => 
-             { const membersDropdown = document.getElementById('membersDropdown');
-              membersDropdown.innerHTML = '';
-              console.log(data)
-               data.forEach(member =>
-                { const option = document.createElement('option'); 
-                option.value = member._id; option.text = member.name;
-                 membersDropdown.appendChild(option); }); }) 
-                 .catch(error => { console.error('Error fetching project members:', error); }); }
-   
-   
-    function assignTaskNotification(assignedTo) 
-    { 
-        const assignedToId = typeof assignedTo === 'string' ? assignedTo : assignedTo._id;
-        console.log("check string",assignedToId)
-        fetch('http://localhost:3000/assign-task', 
-    { method: 'POST',
-     headers: { 'Content-Type': 'application/json' }, 
-     body: JSON.stringify({ assigned_to: assignedToId }) }) 
-     .then(response => response.json()) 
-     .then(data => { console.log('Task assignment response:', data); 
-     alert(data.message); }) 
-     .catch(error => { console.error('Error assigning task:', error); 
-     alert('An error occurred while assigning the task.'); }); }
+        function assignTaskNotification(assignedTo) {
+            const assignedToId =
+                typeof assignedTo === "string" ? assignedTo : assignedTo._id;
+            console.log("check string", assignedToId);
+            fetch("http://localhost:3000/assign-task", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ assigned_to: assignedToId }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Task assignment response:", data);
+                    alert(data.message);
+                })
+                .catch((error) => {
+                    console.error("Error assigning task:", error);
+                    alert("An error occurred while assigning the task.");
+                });
+        }
 
+        function createAlert(taskId, assignedTo) {
+            console.log("creat alert");
+            const alertData = {
+                task_id: taskId,
+                sent_to: assignedTo,
+                alert_type: "Deadline",
+            };
 
-
-
-
-     function createAlert(taskId, assignedTo) {
-    console.log("creat alert")
-    const alertData = {
-        task_id: taskId, 
-        sent_to: assignedTo, 
-        alert_type: 'Deadline', 
-        
-    };
-
-    // Gửi alert đến server
-    fetch('http://localhost:3000/api/alerts', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(alertData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Alert created:', data);
-    })
-    .catch(error => {
-        console.error('Error creating alert:', error);
-    });
-}
-   </script>
-
-
-
-
-      
+            // Gửi alert đến server
+            fetch("http://localhost:3000/api/alerts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(alertData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Alert created:", data);
+                })
+                .catch((error) => {
+                    console.error("Error creating alert:", error);
+                });
+        }
+    </script>
 </html>
