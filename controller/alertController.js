@@ -84,9 +84,10 @@ export const getAlertsByUserId = async (req, res) => {
     const userId = req.params.userId;
     const alerts = await Alert.find({ sent_to: userId })
     .sort({ timestamp: -1 }) 
-    .limit(3)
+    
       .populate("task_id")
-      .populate("sent_to");
+      .populate("sent_to")
+      .populate("user");
       const unreadCount = await Alert.countDocuments({ sent_to: userId, isRead: false });
 
       res.status(200).json({ alerts, unreadCount });
@@ -119,3 +120,23 @@ export const createExtendTime = async (req, res) => {
 
 
 
+export const mark_read = async (req, res) => {
+  try {
+      const { alertId } = req.params;
+
+      // Tìm và cập nhật thông báo
+      const alert = await Alert.findById(alertId);
+      if (!alert) {
+          return res.status(404).json({ message: "Không tìm thấy thông báo." });
+      }
+
+      // Đánh dấu đã đọc
+      alert.isRead = true;
+      await alert.save();
+
+      res.status(200).json({ message: "Thông báo đã được đánh dấu là đã đọc." });
+  } catch (error) {
+      console.error("Lỗi khi đánh dấu thông báo:", error);
+      res.status(500).json({ message: "Lỗi máy chủ." });
+  }
+};

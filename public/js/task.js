@@ -57,7 +57,28 @@ function fetchUserTasks(userId) {
                         </div>
                     </div>
                 </div>
-            
+                
+                <div class="collapse" id="collapseEdit${index}">
+                        <div class="card card-list task-card">
+                            <div class="card-header d-flex align-items-center justify-content-between px-0 mx-3">
+                                <div class="header-title">
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="checkbox" class="custom-control-input" id="done${task._id}">
+                                        <label class="custom-control-label h5" for="done${task._id}">
+                                            Mark as done
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5>Description</h5>
+                                <p>${task.description || 'No description'}</p>
+                                <h5>Checklist</h5>
+                                <div class="row">${checklistHtml}</div>
+                            </div>
+                        </div>
+                    </div>
+
                 <!-- Modal -->
                 <div class="modal fade" id="extendModal${task._id}" tabindex="-1" role="dialog" aria-labelledby="extendModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">

@@ -2391,8 +2391,28 @@
     function createProjectUser(projectId, userId) { const projectUserData = { project_id: projectId, user_id: userId }; fetch('http://localhost:3000/api/projectUsers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(projectUserData) }) .then(response => response.json()) .then(data => { console.log('Project User created:', data); }) .catch(error => { console.error('Error creating project user:', error); }); }
 
 </script>
-        <script>
-        
-        document.addEventListener("DOMContentLoaded", function() { fetchUsers(); }); function fetchUsers() { fetch('http://localhost:3000/api/users') .then(response => response.json()) .then(data => { const assignMembersDropdown = document.getElementById('assignMembersDropdown'); data.forEach(user => { const option = document.createElement('option'); option.value = user._id; option.text = user.name; assignMembersDropdown.appendChild(option); }); }) .catch(error => { console.error('Error fetching users:', error); }); }
-        </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchUsers();
+    });
+
+    function fetchUsers() {
+        fetch('http://localhost:3000/api/users')
+            .then(response => response.json())
+            .then(data => {
+                const users = data.data;  // Truy cập vào key 'data' chứa mảng người dùng
+                const assignMembersDropdown = document.getElementById('assignMembersDropdown');
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user._id;
+                    option.text = user.name;
+                    assignMembersDropdown.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+            });
+    }
+</script>
+       
 </html>

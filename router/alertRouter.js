@@ -6,8 +6,8 @@ import {
     deleteAlert,
     updateAlert,
     getAlertsByUserId,
-    createExtendTime
-    
+    createExtendTime,
+    mark_read
 } from "../controller/alertController.js";
 const router = express.Router();
 
@@ -18,5 +18,5 @@ router.put('/alerts/:id', deleteAlert);
 router.delete('/alerts/:id', updateAlert);
 router.get('/alerts/user/:userId', getAlertsByUserId);
 router.post('/alerts/createExtend', createExtendTime);
-
+router.post('/alerts/:alertId/mark-read',mark_read)
 export default router;
