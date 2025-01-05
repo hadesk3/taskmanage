@@ -1,4 +1,7 @@
-import Project from "../model/projectModel.js";
+import Project from "../model/ProjectModel.js";
+import Task from "../model/TaskModel.js";
+import ProjectUser from "../model/ProjectUserModel.js";
+
 import { Parser } from "json2csv";
 import pdf from "html-pdf";
 export const getAllProjects = async (req, res) => {
@@ -25,7 +28,7 @@ export const getProjectById = async (req, res) => {
 export const createProject = async (req, res) => {
   const project = new Project({
     name: req.body.name,
-    description: "check",
+    description: req.body.description,
     start_date: req.body.start_date,
     end_date: req.body.end_date,
     type: req.body.type,
@@ -126,5 +129,35 @@ export const exportProjectsToCSV = async (req, res) => {
     res.send(csv);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const getProjects = async (req, res) => {
+  try {
+    // Lấy tất cả các dự án và populate ProjectUser, sau đó populate User từ ProjectUser
+    const projects = await Project.find()
+      .lean();
+
+    for (let project of projects) {
+      // Tìm tất cả các ProjectUser liên quan đến project này
+      const projectUsers = await ProjectUser.find({ project_id: project._id })
+        .populate('user_id', 'username') // Populate user_id từ ProjectUser để lấy thông tin username
+        .lean();
+      
+      // Lấy danh sách các username của người dùng liên quan đến dự án
+      project.users = projectUsers.map(pu => pu.user_id.username);
+
+      // Tính toán tiến trình của dự án
+      const tasks = await Task.find({ project_id: project._id }).lean();
+      const completedTasks = tasks.filter(task => task.status === "Done").length;
+      const totalTasks = tasks.length;
+      project.progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    }
+
+    // Trả về thông tin các dự án với danh sách người dùng và tiến trình
+    res.json(projects);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Lỗi server");
   }
 };

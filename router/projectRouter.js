@@ -7,7 +7,8 @@ import {
     deleteProject,
     filterProjectsByStatus,
     searchProjectsByTitle,
-    exportProjectsToCSV
+    exportProjectsToCSV,
+    getProjects
 } from "../controller/projectController.js";
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.delete('/projects/:id', deleteProject);
 router.get('/projects/search', searchProjectsByTitle); 
 router.get('/projects/filter', filterProjectsByStatus);
 router.get('/projects/export/csv', exportProjectsToCSV);
+router.get("/getProjects", getProjects);
 
 export default router;

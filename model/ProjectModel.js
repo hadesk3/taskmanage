@@ -11,7 +11,7 @@ const projectSchema = new Schema({
     start_date: { type: Date, default: Date.now },
     end_date: { type: Date, required: true },
     type: { type: String, required: false },
-    status: { type: String, enum: ['Planned', 'In Progress', 'Completed'], default: "Planned" }
+    status: { type: String, enum: [ 'In Progress', 'Completed'], default: "In Progress" }
 });
 
 const Project = mongoose.model('Project', projectSchema);
