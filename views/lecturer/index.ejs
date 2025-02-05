@@ -561,12 +561,40 @@
                         ${account.email}
                     </td>
                     <td>${account.address}</td>
-                    <td>
-                        <span
-                            class="badge bg-primary"
-                            >${account.status}</span
+                   <td>
+                        <div
+                            class="custom-control custom-switch custom-switch-text custom-control-inline"
                         >
+                            <div class="custom-switch-inner">
+                                <p class="mb-0">${
+                                    account.status === "active"
+                                        ? "Active"
+                                        : "Inactive"
+                                }</p>
+                                <input
+                                    type="checkbox"
+                                    class="custom-control-input"
+                                    id="customSwitch-${account._id}"
+                                    ${
+                                        account.status === "active"
+                                            ? "checked"
+                                            : ""
+                                    }
+                                    onchange="toggleAccountStatus('${
+                                        account._id
+                                    }', this.checked)"
+                                />
+                                <label
+                                    class="custom-control-label"
+                                    for="customSwitch-${account._id}"
+                                    data-on-label="ON"
+                                    data-off-label="OFF"
+                                >
+                                </label>
+                            </div>
+                        </div>
                     </td>
+
                     <td>${createdDate}</td>
                     <td>
                         <div
@@ -590,7 +618,9 @@
                                 data-placement="top"
                                 title="edit"
                                 data-original-title="Edit"
-                                onclick="edit_account('${index}', '${account._id}')"
+                                onclick="edit_account('${index}', '${
+                    account._id
+                }')"
                                 ><i
                                     class="ri-pencil-line mr-0"
                                 ></i
