@@ -7,7 +7,10 @@ import { Parser } from "json2csv";
 
 export const getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
+        const projects = await Project.find().populate({
+            path: "lecturers", // Populate lecturers
+            select: "name avatar", // Chỉ lấy name và avatar của lecturers
+        });
         res.status(200).json(pakage(0, "Get project successfully!", projects));
     } catch (err) {
         res.status(500).json(pakage(1, "Internal server error!", err.message));
@@ -27,6 +30,8 @@ export const getProjectById = async (req, res) => {
 };
 
 export const createProject = async (req, res) => {
+    console.log(req.body.lecturers);
+
     const project = new Project({
         name: req.body.name,
         description: req.body.description,
@@ -70,6 +75,9 @@ export const updateProject = async (req, res) => {
         }
         if (req.body.status != null) {
             project.status = req.body.status;
+        }
+        if (req.body.lecturers != null) {
+            project.lecturers = req.body.lecturers;
         }
 
         const updatedProject = await project.save();

@@ -313,14 +313,16 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group mb-3">
-                                    <label for="editMember" class="h5"
+                                    <label for="editUser" class="h5"
                                         >Assign Members*</label
                                     >
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="editMember"
-                                    />
+                                    <select
+                                        name="type"
+                                        class="selectpicker form-control"
+                                        multiple="multiple"
+                                        data-style="py-0"
+                                        id="editUser"
+                                    ></select>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -417,70 +419,6 @@
             let listUser = [];
             let total = 0;
 
-            const render = (projects) => {
-                let html = "";
-                projects.forEach((project) => {
-                    html += `
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card card-block card-stretch card-height">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between mb-4">
-                                        <div id="circle-progress-01" class="circle-progress-01 circle-progress circle-progress-primary" data-min-value="0" data-max-value="100" data-value="25" data-type="percent"></div>
-                                        <i class="ri-star-fill m-0 text-warning"></i>
-                                    </div>
-                                    <h5 class="mb-1">${project.name}</h5>
-                                    <p class="mb-3">${project.description}</p>
-                                    <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                                        <div class="iq-media-group">
-                                            <a href="#" class="iq-media">
-                                                <img class="img-fluid avatar-40 rounded-circle" src="/images/user/05.jpg" alt="">
-                                            </a>
-                                            <a href="#" class="iq-media">
-                                                <img class="img-fluid avatar-40 rounded-circle" src="/images/user/06.jpg" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <button class="btn bg-secondary-light" type="button" data-toggle="modal" data-target="#edit-project-modal" aria-expanded="false" aria-controls="collapseEdit1" onclick="editProject('${project._id}')">
-                                                <i class="ri-edit-box-line m-0"></i>
-                                            </button>
-
-                                            <button class="btn bg-secondary-light ml-2" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="deleteProject('${project._id}')">
-                                                <i class="ri-delete-bin-line m-0"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    accountBody.innerHTML = html;
-                });
-            };
-            const getProjects = async () => {
-                showLoading();
-                const url = `${window.location.origin}/api/projects`;
-                try {
-                    const res = await fetch(url);
-
-                    const data = await res.json();
-                    listProject = data.data;
-
-                    hideLoading();
-                    render(listProject);
-                    return data;
-                } catch (error) {
-                    hideLoading();
-                    console.log(error);
-                }
-            };
-
-            const init = async () => {
-                await getProjects();
-            };
-
-            // INIT
-            init();
-
             // Get user
             function getUser() {
                 const url = `${window.location.origin}/api/users`;
@@ -512,6 +450,79 @@
             };
 
             getUser();
+
+            const render = (projects) => {
+                let html = "";
+                projects.forEach((project) => {
+                    const lecturersHtml = project.lecturers
+                        .map((lecturer) => {
+                            const avatar =
+                                lecturer.avatar ||
+                                "/images/user/default-avatar.png";
+                            return `
+                <div class="iq-media text-center">
+                    <img class="img-fluid avatar-40 rounded-circle" src="${avatar}" alt="${lecturer.name}">
+                </div>
+            `;
+                        })
+                        .join("");
+
+                    html += `
+            <div class="col-lg-4 col-md-6">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div id="circle-progress-01" class="circle-progress-01 circle-progress circle-progress-primary" data-min-value="0" data-max-value="100" data-value="25" data-type="percent"></div>
+                            <i class="ri-star-fill m-0 text-warning"></i>
+                        </div>
+                        <h5 class="mb-1">${project.name}</h5>
+                        <p class="mb-3">${project.description}</p>
+                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                            <div class="iq-media-group d-flex">
+                                ${lecturersHtml}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn bg-secondary-light" type="button" data-toggle="modal" data-target="#edit-project-modal" aria-expanded="false" aria-controls="collapseEdit1" onclick="editProject('${project._id}')">
+                                    <i class="ri-edit-box-line m-0"></i>
+                                </button>
+                                <button class="btn bg-secondary-light ml-2" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="deleteProject('${project._id}')">
+                                    <i class="ri-delete-bin-line m-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+                });
+
+                accountBody.innerHTML = html;
+            };
+
+            const getProjects = async () => {
+                showLoading();
+                const url = `${window.location.origin}/api/projects`;
+                try {
+                    const res = await fetch(url);
+
+                    const data = await res.json();
+                    listProject = data.data;
+
+                    hideLoading();
+                    render(listProject);
+                    return data;
+                } catch (error) {
+                    hideLoading();
+                    console.log(error);
+                }
+            };
+
+            const init = async () => {
+                await getProjects();
+            };
+
+            // INIT
+            init();
 
             // DELETE
             function deleteProject(id) {
@@ -555,7 +566,12 @@
                 const dueDate = document.getElementById(
                     "exampleInputText004"
                 ).value;
-                const members = document.getElementById("addUser").value;
+                const selectElement = document.getElementById("addUser");
+                const members = Array.from(selectElement.selectedOptions).map(
+                    (option) => option.value
+                );
+
+                console.log(members);
 
                 const url = `${window.location.origin}/api/projects`;
                 fetch(url, {
@@ -576,8 +592,8 @@
                         if (data.code === 0) {
                             hideLoading();
                             $("#new-project-modal").modal("hide");
-                            clearInput();
                             init();
+                            clearInput();
                         }
                     })
                     .catch((error) => {
@@ -590,14 +606,41 @@
             function clearInput() {
                 document.getElementById("exampleInputText01").value = "";
                 document.getElementById("exampleInputText02").value = "";
-                // document.getElementById("exampleInputText03").value = "";
+                const selectElement = document.getElementById("addUser");
+                Array.from(selectElement.options).forEach(
+                    (option) => (option.selected = false)
+                );
                 document.getElementById("exampleInputText004").value = "";
-                document.getElementById("exampleInputText07").value = "";
             }
 
             // EDIT
             function editProject(id) {
                 const project = listProject.find((p) => p._id === id);
+
+                const editUserSelect = document.getElementById("editUser");
+
+                // Reset dropdown trước khi thêm option
+                editUserSelect.innerHTML = "";
+
+                listUser.forEach((user) => {
+                    const option = document.createElement("option");
+                    option.value = user._id;
+                    option.textContent = user.name;
+
+                    // Kiểm tra nếu user có trong danh sách lecturers
+                    const isLecturer = project.lecturers.some(
+                        (lecturer) => lecturer._id === user._id
+                    );
+                    if (isLecturer) {
+                        option.selected = true; // Đánh dấu đã được chọn
+                    }
+
+                    editUserSelect.appendChild(option);
+                });
+
+                // Cập nhật giao diện selectpicker
+                $("#editUser").selectpicker("refresh");
+
                 document.getElementById("editProjectName").value = project.name;
                 document.getElementById("editProjectDescription").value =
                     project.description;
@@ -610,7 +653,7 @@
                 } else {
                     document.getElementById("editEndDate").value = ""; // Để trống nếu không có giá trị
                 }
-                document.getElementById("editMember").value = project.members;
+
                 document.getElementById("delid").value = id;
             }
 
@@ -622,7 +665,10 @@
                     "editProjectDescription"
                 ).value;
                 const dueDate = document.getElementById("editEndDate").value;
-                const members = document.getElementById("editMember").value;
+                const selectElement = document.getElementById("editUser");
+                const members = Array.from(selectElement.selectedOptions).map(
+                    (option) => option.value
+                );
 
                 const url = `${window.location.origin}/api/projects/${id}`;
                 fetch(url, {
@@ -634,7 +680,7 @@
                         name,
                         description,
                         end_date: dueDate,
-                        members,
+                        lecturers: members,
                     }),
                 })
                     .then((res) => res.json())
