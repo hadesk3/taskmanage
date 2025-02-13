@@ -468,7 +468,7 @@
                         .join("");
 
                     html += `
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6" onclick="redirectPage('${project._id}');">
                 <div class="card card-block card-stretch card-height">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -482,10 +482,10 @@
                                 ${lecturersHtml}
                             </div>
                             <div class="d-flex align-items-center">
-                                <button class="btn bg-secondary-light" type="button" data-toggle="modal" data-target="#edit-project-modal" aria-expanded="false" aria-controls="collapseEdit1" onclick="editProject('${project._id}')">
+                                <button class="btn bg-secondary-light no-link" type="button" data-toggle="modal" data-target="#edit-project-modal" aria-expanded="false" aria-controls="collapseEdit1" onclick="editProject('${project._id}'); event.stopPropagation();">
                                     <i class="ri-edit-box-line m-0"></i>
                                 </button>
-                                <button class="btn bg-secondary-light ml-2" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="deleteProject('${project._id}')">
+                                <button class="btn bg-secondary-light ml-2 no-link" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="deleteProject('${project._id}'); event.stopPropagation();">
                                     <i class="ri-delete-bin-line m-0"></i>
                                 </button>
                             </div>
@@ -493,6 +493,7 @@
                     </div>
                 </div>
             </div>
+
         `;
                 });
 
@@ -699,6 +700,15 @@
             }
 
             //
+            function redirectPage(id) {
+                let members = listProject.find((p) => p._id === id).lecturers;
+                localStorage.setItem("listUser", JSON.stringify(members));
+                localStorage.setItem(
+                    "projectName",
+                    listProject.find((p) => p._id === id).name
+                );
+                window.location.href = `/task/${id}`;
+            }
         </script>
     </body>
 </html>

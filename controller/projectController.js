@@ -9,7 +9,7 @@ export const getAllProjects = async (req, res) => {
     try {
         const projects = await Project.find().populate({
             path: "lecturers", // Populate lecturers
-            select: "name avatar", // Chỉ lấy name và avatar của lecturers
+            select: "name avatar email", // Chỉ lấy name và avatar của lecturers
         });
         res.status(200).json(pakage(0, "Get project successfully!", projects));
     } catch (err) {

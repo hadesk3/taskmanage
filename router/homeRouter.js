@@ -17,7 +17,10 @@ router.get("/", getHomePage);
 router.get("/project", getProjectPage);
 
 // [GET] /task
-router.get("/task", getTaskPage);
+// router.get("/task", getTaskPage);
+
+// [GET] /task/:id
+router.get("/task/:id", getTaskPage);
 
 // [GET] /lecturer
 router.get("/lecturer", getLecturerPage);
