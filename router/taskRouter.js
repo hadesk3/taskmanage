@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import {
     getAllTasks,
     getTaskById,
@@ -12,10 +13,11 @@ import {
     getAllTaskAndCheckList,
 } from "../controller/taskController.js";
 const router = express.Router();
+const upload = multer({ dest: "uploads/" });
 
 router.get("/tasks/:id", getAllTasks);
 router.get("/tasks/:id", getTaskById);
-router.post("/tasks", createTask);
+router.post("/tasks", upload.single("file"), createTask);
 router.put("/tasks/:id", updateTask);
 router.delete("/tasks/:id", deleteTask);
 router.get("/tasks/filter", filterTasksByStatus);

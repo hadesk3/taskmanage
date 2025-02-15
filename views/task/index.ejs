@@ -704,11 +704,20 @@
                                             <input
                                                 type="checkbox"
                                                 class="custom-control-input"
-                                                id="customCheck01"
+                                                id="customCheck${task._id}"
+                                                data-task-id="${task._id}"
+                                                 onchange="debounceToggleTaskStatus('${
+                                                     task._id
+                                                 }')"
+                                                ${
+                                                    task.status === "Done"
+                                                        ? "checked"
+                                                        : ""
+                                                }
                                             />
                                             <label
                                                 class="custom-control-label"
-                                                for="customCheck01"
+                                                for="customCheck${task._id}"
                                             ></label>
                                         </div>
                                         <div>
@@ -769,8 +778,8 @@
                                                 class="ri-delete-bin-line m-0"
                                             ></i>
                                         </button>
-                                        <a href="#${collapseId}" class="btn bg-secondary-light mr-3 collapse-toggle" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="${collapseId}"> 
-                                            <i class="ri-arrow-down-s-line m-0"></i>    
+                                        <a href="#${collapseId}" class="btn bg-secondary-light mr-3 collapse-toggle" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="${collapseId}">
+                                            <i class="ri-arrow-down-s-line m-0"></i>
                                         </a>
 
                                     </div>
@@ -815,7 +824,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    
+
                                     <div class="card mb-3">
                                         <div
                                             class="card-body"
@@ -884,7 +893,7 @@
                                                         class="mb-2"
                                                     >
                                                         Checklist
-                                                        
+
                                                     </h5>
 
                                                     <div
@@ -915,6 +924,7 @@
                                                 type="file"
                                                 class="custom-file-input"
                                                 id="inputGroupFile001"
+
                                             />
                                             <label
                                                 class="custom-file-label"
@@ -923,8 +933,12 @@
                                                 media</label
                                             >
                                         </div>
+                                        <p id="fileInfo">
+                                            <a href="${
+                                                task.media
+                                            }" target="_blank">📂 Xem file đính kèm</a>    
+                                        </p>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -1069,10 +1083,10 @@
 
         function createTask() {
             displayLoading();
+
             const title = document.getElementById("exampleInputText02").value;
             const members = document.getElementById("membersDropdown").value;
             const dueDate = document.getElementById("exampleInputText05").value;
-            // const category = document.getElementById("exampleInputText2").value;
             const description = document.getElementById(
                 "exampleInputText040"
             ).value;
@@ -1080,32 +1094,29 @@
                 "exampleInputText005"
             ).value;
             const checklistArray = checklist.split(",");
-            const checklistObjects = checklistArray.map((item) => {
-                return {
-                    title: item.trim(),
-                    status: false, //
-                };
-            });
+            const checklistObjects = checklistArray.map((item) => ({
+                title: item.trim(),
+                status: false,
+            }));
 
-            const attachments =
-                document.getElementById("inputGroupFile003").value;
+            const fileInput = document.getElementById("inputGroupFile003");
+            const file = fileInput.files[0];
 
-            const payload = {
-                project_id: id,
-                title,
-                assigned_to: members,
-                deadline: dueDate,
-                description,
-                checkList: checklistObjects,
-                attachments,
-            };
+            // Dùng FormData để gửi dữ liệu và file
+            const formData = new FormData();
+            formData.append("project_id", id);
+            formData.append("title", title);
+            formData.append("assigned_to", members);
+            formData.append("deadline", dueDate);
+            formData.append("description", description);
+            formData.append("checkList", JSON.stringify(checklistObjects));
+            if (file) {
+                formData.append("file", file);
+            }
 
             fetch("http://localhost:3000/api/tasks", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
+                body: formData, // Không cần đặt "Content-Type", trình duyệt sẽ tự động xử lý
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -1128,7 +1139,7 @@
             document.getElementById("exampleInputText02").value = "";
             document.getElementById("membersDropdown").value = "";
             document.getElementById("exampleInputText05").value = "";
-            document.getElementById("exampleInputText2").value = "";
+            // document.getElementById("exampleInputText2").value = ""; category
             document.getElementById("exampleInputText040").value = "";
             document.getElementById("exampleInputText005").value = "";
             document.getElementById("inputGroupFile003").value = "";
@@ -1228,6 +1239,41 @@
                 hideLoading();
                 console.log(error);
             }
+        }
+
+        let debounceTimeout;
+
+        function debounceToggleTaskStatus(id) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                toggleTaskStatus(id);
+            }, 5000); // Chỉ gửi request nếu không có thao tác mới trong 500ms
+        }
+
+        function toggleTaskStatus(id) {
+            const task = listTasks.find((p) => p._id === id);
+            const newStatus = task.status === "Done" ? "In Progress" : "Done";
+
+            task.status = newStatus;
+
+            fetch(`http://localhost:3000/api/tasks/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: newStatus }),
+            })
+                .then((response) => {
+                    if (!response.ok)
+                        throw new Error("Lỗi cập nhật trạng thái");
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Cập nhật trạng thái thành công:", data);
+                    hideLoading();
+                })
+                .catch((error) => {
+                    console.error("Lỗi:", error);
+                    alert("Không thể cập nhật trạng thái task.");
+                });
         }
     </script>
 </html>

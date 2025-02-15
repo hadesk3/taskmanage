@@ -1,6 +1,7 @@
 import Task from "../model/TaskModel.js";
 import Checklist from "../model/CheckListModel.js";
 import pakage from "../middlewares/pakage.js";
+import { uploadFile } from "../config/googleDrive.js";
 
 import { Parser } from "json2csv";
 import pdf from "html-pdf";
@@ -46,21 +47,29 @@ export const getTaskById = async (req, res) => {
 };
 
 export const createTask = async (req, res) => {
-    const task = new Task({
-        project_id: req.body.project_id,
-        assigned_to: req.body.assigned_to,
-        title: req.body.title,
-        description: req.body.description,
-        checkList: req.body.checkList,
-        deadline: req.body.deadline,
-        status: req.body.status,
-    });
+    let fileLink = null;
+    if (req.file) {
+        fileLink = await uploadFile(req.file.path);
+    }
 
     try {
+        const checkList = JSON.parse(req.body.checkList || "[]");
+
+        const task = new Task({
+            project_id: req.body.project_id,
+            assigned_to: req.body.assigned_to,
+            title: req.body.title,
+            description: req.body.description,
+            checkList: checkList,
+            deadline: req.body.deadline,
+            status: req.body.status,
+            media: fileLink,
+        });
+
         const newTask = await task.save();
         res.json(pakage(0, "Task created successfully!", newTask));
     } catch (err) {
-        res.json(pakage(1, "Error creating task!", err));
+        res.json(pakage(1, "Error creating task!", err.message));
     }
 };
 
