@@ -8,7 +8,7 @@ export const sendMail = async (to, subject, text) => {
             secure: false,
             auth: {
                 user: "maithanhbinh13102003@gmail.com",
-                pass: "pade meun ipee tnwh",
+                pass: "kcnz hrxr pywi mrok",
             },
         });
 

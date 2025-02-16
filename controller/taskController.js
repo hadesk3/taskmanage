@@ -76,35 +76,58 @@ export const createTask = async (req, res) => {
 export const updateTask = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
-        if (task == null) {
-            return res.json(pakage(1, "Task not found!", null));
+        const { checkListIndex, status } = req.body;
+
+        if (!task) {
+            return res.json({
+                status: 1,
+                message: "Task not found!",
+                data: null,
+            });
         }
-        if (req.body.assigned_to != null) {
-            task.assigned_to = req.body.assigned_to;
+
+        if (req.body.assigned_to) task.assigned_to = req.body.assigned_to;
+        if (req.body.title) task.title = req.body.title;
+        if (req.body.description) task.description = req.body.description;
+        if (req.body.deadline) task.deadline = req.body.deadline;
+        if (req.body.status) task.status = req.body.status;
+
+        // Nếu trạng thái thay đổi, cập nhật toàn bộ checklist
+        if (status === "Done") {
+            task.checkList = task.checkList.map((item) => ({
+                ...item,
+                status: true,
+            }));
+        } else if (status === "In Progress") {
+            task.checkList = task.checkList.map((item) => ({
+                ...item,
+                status: false,
+            }));
         }
-        if (req.body.title != null) {
-            task.title = req.body.title;
-        }
-        if (req.body.description != null) {
-            task.description = req.body.description;
-        }
-        if (req.body.deadline != null) {
-            task.deadline = req.body.deadline;
-        }
-        if (req.body.status != null) {
-            task.status = req.body.status;
-        }
-        if (req.body.assigned_to != null) {
-            task.assigned_to = req.body.assigned_to;
-        }
-        if (req.body.checkList != null) {
-            task.checkList = req.body.checkList;
+
+        // Nếu chỉ cập nhật một mục trong checklist
+        if (checkListIndex !== undefined && status !== undefined) {
+            if (task.checkList[checkListIndex]) {
+                task.checkList[checkListIndex].status = status;
+            } else {
+                return res
+                    .status(400)
+                    .json({ status: 1, message: "Invalid checklist index!" });
+            }
         }
 
         const updatedTask = await task.save();
-        res.json(pakage(0, "Task updated successfully!", updatedTask));
+        res.json({
+            status: 0,
+            message: "Task updated successfully!",
+            data: updatedTask,
+        });
     } catch (err) {
-        res.json(pakage(1, "Error updating task!", err));
+        res.json({
+            status: 1,
+            message: "Error updating task!",
+            error: err.message,
+        });
     }
 };
 

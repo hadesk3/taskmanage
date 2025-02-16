@@ -114,6 +114,7 @@
 
                         <div class="col-lg-12">
                             <div class="card">
+                                <h4 class="mt-3 ml-2">Progress Task:</h4>
                                 <div class="card-body">
                                     <div class="row" id="taskList"></div>
                                 </div>
@@ -674,7 +675,11 @@
                 <div class="custom-control custom-checkbox custom-control-inline">
                     <input type="checkbox" class="custom-control-input" id="checklist-${
                         task._id
-                    }-${index}" ${item.status ? "checked" : ""}>
+                    }-${index}" ${
+                            item.status ? "checked" : ""
+                        } onchange="toggleChecklistItem('${
+                            task._id
+                        }', ${index})">
                     <label class="custom-control-label" for="checklist-${
                         task._id
                     }-${index}">${item.title}</label>
@@ -1252,14 +1257,26 @@
 
         function toggleTaskStatus(id) {
             const task = listTasks.find((p) => p._id === id);
+            if (!task) return;
+
             const newStatus = task.status === "Done" ? "In Progress" : "Done";
 
+            // Cập nhật status của task
             task.status = newStatus;
+
+            // Cập nhật toàn bộ checklist
+            const updatedChecklist = task.checkList.map((item) => ({
+                ...item,
+                status: newStatus === "Done", // Nếu task hoàn thành, đánh dấu checklist là true
+            }));
 
             fetch(`http://localhost:3000/api/tasks/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify({
+                    status: newStatus,
+                    checkList: updatedChecklist,
+                }),
             })
                 .then((response) => {
                     if (!response.ok)
@@ -1268,12 +1285,44 @@
                 })
                 .then((data) => {
                     console.log("Cập nhật trạng thái thành công:", data);
-                    hideLoading();
                 })
                 .catch((error) => {
                     console.error("Lỗi:", error);
                     alert("Không thể cập nhật trạng thái task.");
                 });
+        }
+
+        async function toggleChecklistItem(taskId, index) {
+            const checkbox = document.getElementById(
+                `checklist-${taskId}-${index}`
+            );
+            const isChecked = checkbox.checked;
+
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/api/tasks/${taskId}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            checkListIndex: index,
+                            status: isChecked,
+                        }),
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to update checklist item");
+                }
+
+                const result = await response.json();
+                console.log("Checklist updated successfully!", result);
+            } catch (error) {
+                console.error("Error updating checklist item:", error);
+                checkbox.checked = !isChecked; // Rollback nếu lỗi
+            }
         }
     </script>
 </html>
