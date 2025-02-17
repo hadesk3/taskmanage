@@ -6,6 +6,11 @@ import { uploadFile } from "../config/googleDrive.js";
 import { Parser } from "json2csv";
 import pdf from "html-pdf";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+const ADMIN_ID = process.env.ADMIN_ID;
+
 export const getAllTasks = async (req, res) => {
     try {
         const projectId = req.params.id;
@@ -24,10 +29,18 @@ export const getAllTasks = async (req, res) => {
 
         // Kiểm tra nếu không có task nào
         if (tasks.length === 0) {
-            return res.json(pakage(2, "No task found!", null));
+            return res.json(
+                pakage(2, "No task found!", { user: req.user, ADMIN_ID })
+            );
         }
 
-        return res.json(pakage(0, "Get tasks successfully!", tasks));
+        return res.json(
+            pakage(0, "Get tasks successfully!", {
+                tasks,
+                user: req.user,
+                ADMIN_ID,
+            })
+        );
     } catch (error) {
         console.error("Error fetching tasks by projectId:", error);
         res.status(500).json(pakage(1, "Internal server error!", error));

@@ -29,7 +29,7 @@
             href="/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css"
         />
     </head>
-    <body class="  ">
+    <body class="">
         <!-- loader Start -->
         <div id="loading">
             <div id="loading-center"></div>
@@ -90,6 +90,8 @@
                                                 </div>
                                             </div>
 
+                                            <% if(user.role === 'headofsubject')
+                                            { %>
                                             <div
                                                 class="pl-3 border-left btn-new"
                                             >
@@ -101,6 +103,7 @@
                                                     >New Project</a
                                                 >
                                             </div>
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>
@@ -451,9 +454,9 @@
 
             getUser();
 
-            const render = (projects) => {
+            const render = (projects, user) => {
                 let html = "";
-                projects.forEach((project) => {
+                projects.forEach((project, index) => {
                     const lecturersHtml = project.lecturers
                         .map((lecturer) => {
                             const avatar =
@@ -462,39 +465,60 @@
                             return `
                 <div class="iq-media text-center">
                     <img class="img-fluid avatar-40 rounded-circle" src="${avatar}" alt="${lecturer.name}">
-                </div>
-            `;
+                </div>`;
                         })
                         .join("");
 
-                    html += `
-            <div class="col-lg-4 col-md-6" onclick="redirectPage('${project._id}');">
-                <div class="card card-block card-stretch card-height">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <div id="circle-progress-01" class="circle-progress-01 circle-progress circle-progress-primary" data-min-value="0" data-max-value="100" data-value="25" data-type="percent"></div>
-                            <i class="ri-star-fill m-0 text-warning"></i>
-                        </div>
-                        <h5 class="mb-1">${project.name}</h5>
-                        <p class="mb-3">${project.description}</p>
-                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                            <div class="iq-media-group d-flex">
-                                ${lecturersHtml}
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <button class="btn bg-secondary-light no-link" type="button" data-toggle="modal" data-target="#edit-project-modal" aria-expanded="false" aria-controls="collapseEdit1" onclick="editProject('${project._id}'); event.stopPropagation();">
-                                    <i class="ri-edit-box-line m-0"></i>
-                                </button>
-                                <button class="btn bg-secondary-light ml-2 no-link" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="deleteProject('${project._id}'); event.stopPropagation();">
-                                    <i class="ri-delete-bin-line m-0"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    const adminActions =
+                        user && user.role === "headofsubject"
+                            ? `
+                                <div class="d-flex align-items-center">
+                                    <button class="btn bg-secondary-light no-link" type="button"
+                                        data-toggle="modal"
+                                        data-target="#edit-project-modal"
+                                        onclick="editProject('${project._id}'); event.stopPropagation();">
+                                        <i class="ri-edit-box-line m-0"></i>
+                                    </button>
+                                    <button class="btn bg-secondary-light ml-2 no-link" type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                        onclick="deleteProject('${project._id}'); event.stopPropagation();">
+                                        <i class="ri-delete-bin-line m-0"></i>
+                                    </button>
+                                </div>`
+                            : `
+                                <div class="project-deadline text-muted font-weight-bold text-right">
+                                    Deadline: ${new Date(
+                                        project.end_date
+                                    ).toLocaleDateString()}
+                                </div>`;
 
-        `;
+                    html += `
+                        <div class="col-lg-4 col-md-6" onclick="redirectPage('${project._id}');">
+                            <div class="card card-block card-stretch card-height">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div
+                                            id="circle-progress-6"
+                                            class="circle-progress-01 circle-progress circle-progress-primary"
+                                            data-min-value="0"
+                                            data-max-value="100"
+                                            data-value="${project.completion}"
+                                            data-type="percent"
+                                        ></div>
+                                        <i class="ri-star-fill m-0 text-warning"></i>
+                                    </div>
+                                    <h5 class="mb-1">${project.name}</h5>
+                                    <p class="mb-3">${project.description}</p>
+                                    <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                        <div class="iq-media-group d-flex">
+                                            ${lecturersHtml}
+                                        </div>
+                                        ${adminActions}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
                 });
 
                 accountBody.innerHTML = html;
@@ -507,10 +531,10 @@
                     const res = await fetch(url);
 
                     const data = await res.json();
-                    listProject = data.data;
+                    listProject = data.data.projectsWithCompletion;
 
                     hideLoading();
-                    render(listProject);
+                    render(data.data.projectsWithCompletion, data.data.user);
                     return data;
                 } catch (error) {
                     hideLoading();

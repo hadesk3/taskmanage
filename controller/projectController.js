@@ -7,11 +7,42 @@ import { Parser } from "json2csv";
 
 export const getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find().populate({
-            path: "lecturers", // Populate lecturers
-            select: "name avatar email", // Chỉ lấy name và avatar của lecturers
-        });
-        res.status(200).json(pakage(0, "Get project successfully!", projects));
+        const role = req.user.role;
+
+        let projectsWithCompletion = [];
+        if (role === "headofsubject") {
+            const projects = await Project.find().populate({
+                path: "lecturers", // Populate lecturers
+                select: "name avatar email", // Chỉ lấy name và avatar của lecturers
+            });
+
+            projectsWithCompletion = await Promise.all(
+                projects.map(async (project) => {
+                    const completion = await getProjectCompletion(project._id);
+                    return { ...project.toObject(), completion };
+                })
+            );
+        } else {
+            const projects = await Project.find({
+                lecturers: req.user._id,
+            }).populate({
+                path: "lecturers", // Populate lecturers
+                select: "name avatar email", // Chỉ lấy name và avatar của lecturers
+            });
+
+            projectsWithCompletion = await Promise.all(
+                projects.map(async (project) => {
+                    const completion = await getProjectCompletion(project._id);
+                    return { ...project.toObject(), completion };
+                })
+            );
+        }
+        res.status(200).json(
+            pakage(0, "Get project successfully!", {
+                projectsWithCompletion,
+                user: req.user,
+            })
+        );
     } catch (err) {
         res.status(500).json(pakage(1, "Internal server error!", err.message));
     }
@@ -26,6 +57,23 @@ export const getProjectById = async (req, res) => {
         res.status(200).json(project);
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+};
+
+const getProjectCompletion = async (projectId) => {
+    try {
+        const totalTasks = await Task.countDocuments({ project_id: projectId });
+        const completedTasks = await Task.countDocuments({
+            project_id: projectId,
+            status: "Done",
+        });
+
+        return totalTasks > 0
+            ? Math.round((completedTasks / totalTasks) * 100)
+            : 0;
+    } catch (error) {
+        console.error("Error calculating project completion:", error);
+        return 0;
     }
 };
 
