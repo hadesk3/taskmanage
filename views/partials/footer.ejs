@@ -16,14 +16,14 @@
                 </ul>
             </div>
             <div class="col-lg-6 text-right">
-                <span class="mr-1"
-                    ><script>
-                        document.write(new Date().getFullYear());
-                    </script>
-                    ©</span
-                >
+                <span id="year" class="mr-1"></span> ©
                 <a href="#" class="">ThanhBinh_ManhHa</a>.
             </div>
+
+            <script>
+                document.getElementById("year").textContent =
+                    new Date().getFullYear();
+            </script>
         </div>
     </div>
 </footer>

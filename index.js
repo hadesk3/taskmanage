@@ -79,37 +79,78 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: { origin: "*" }, // Cho phép tất cả kết nối
 });
-// Khi client kết nối
+const ADMIN_ID = process.env.ADMIN_ID; // Lấy ID admin từ .env
+
+// Lưu trữ userId và socketId
+const onlineUsers = new Map();
+
 io.on("connection", (socket) => {
-    console.log("🔌 User connected:", socket.id);
+    console.log("🔗 New user connected:", socket.id);
 
+    // Lưu socketId của user khi họ kết nối
+    socket.on("register-user", (userId) => {
+        onlineUsers.set(userId, socket.id);
+        console.log(`✅ User ${userId} connected with socket ${socket.id}`);
+    });
+
+    // User gửi yêu cầu gia hạn thời gian (Gửi đến admin)
     socket.on("send-extend-notification", async (data) => {
-        const { taskId, userId, reason, dateExtend } = data;
-        const adminId = await getAdminId();
+        const { taskId, user, reason, dateExtend, title } = data;
 
-        if (!adminId) {
-            console.error("❌ Không tìm thấy Admin!");
-            return;
-        }
-
-        // Tạo thông báo trong database
-        const newAlert = new Alert({
+        const newAlert = new Notification({
             task_id: taskId,
             alert_type: "Extend",
             reason,
             date_extend: dateExtend,
-            sent_to: adminId,
-            user: userId,
+            sent_to: ADMIN_ID, // Gửi đến admin
+            user: user._id, // Người gửi yêu cầu
         });
 
         await newAlert.save();
 
-        // Gửi thông báo đến Admin
-        io.to(adminId).emit("receive-notification", newAlert);
+        // Gửi thông báo cho admin nếu online
+        if (onlineUsers.has(ADMIN_ID)) {
+            io.to(onlineUsers.get(ADMIN_ID)).emit("receiveNotification", {
+                senderId: data.senderId,
+                reason: reason,
+                timestamp: new Date().toISOString(),
+                user: data.user,
+                task_id: { title }, // Thông tin người gửi
+            });
+        }
     });
 
+    // Admin gửi thông báo đến user cụ thể
+    socket.on("send-admin-notification", async (data) => {
+        const { userId, message } = data;
+
+        const newAlert = new Alert({
+            alert_type: "AdminMessage",
+            reason: message,
+            sent_to: userId, // Gửi đến user cụ thể
+            user: ADMIN_ID, // Admin là người gửi
+        });
+
+        await newAlert.save();
+
+        // Gửi thông báo cho user nếu họ online
+        if (onlineUsers.has(userId)) {
+            io.to(onlineUsers.get(userId)).emit(
+                "receive-notification",
+                newAlert
+            );
+        }
+    });
+
+    // Xóa user khỏi danh sách khi ngắt kết nối
     socket.on("disconnect", () => {
-        console.log("🔌 User disconnected:", socket.id);
+        for (let [key, value] of onlineUsers.entries()) {
+            if (value === socket.id) {
+                onlineUsers.delete(key);
+                console.log(`❌ User ${key} disconnected`);
+                break;
+            }
+        }
     });
 });
 

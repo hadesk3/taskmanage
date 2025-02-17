@@ -30,7 +30,6 @@
     <body>
         <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
 
-        <script type="module" src="/js/notification.js"></script>
         <div class="iq-top-navbar">
             <div class="iq-navbar-custom">
                 <nav class="navbar navbar-expand-lg navbar-light p-0">
@@ -160,59 +159,14 @@
                                                             class="badge badge-primary badge-card"
                                                             href="#"
                                                             id="notificationCount"
-                                                            >3</a
+                                                            >0</a
                                                         >
                                                     </div>
                                                 </div>
                                                 <div
                                                     class="px-3 pt-0 pb-0 sub-card"
                                                     id="notificationList"
-                                                >
-                                                    <a
-                                                        href="#"
-                                                        class="iq-sub-card"
-                                                    >
-                                                        <div
-                                                            class="media align-items-center cust-card py-3 border-bottom"
-                                                        >
-                                                            <div class="">
-                                                                <img
-                                                                    class="avatar-50 rounded-small"
-                                                                    src="/images/user/01.jpg"
-                                                                    alt="01"
-                                                                />
-                                                            </div>
-                                                            <div
-                                                                class="media-body ml-3"
-                                                            >
-                                                                <div
-                                                                    class="d-flex align-items-center justify-content-between"
-                                                                >
-                                                                    <h6
-                                                                        class="mb-0"
-                                                                    >
-                                                                        Emma
-                                                                        Watson
-                                                                    </h6>
-                                                                    <small
-                                                                        class="text-dark"
-                                                                        ><b
-                                                                            >12
-                                                                            : 47
-                                                                            pm</b
-                                                                        ></small
-                                                                    >
-                                                                </div>
-                                                                <small
-                                                                    class="mb-0"
-                                                                    >Lorem ipsum
-                                                                    dolor sit
-                                                                    amet</small
-                                                                >
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
+                                                ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -321,43 +275,83 @@
                 </nav>
             </div>
         </div>
+        <input type="hidden" id="userData" data-user='<%=
+        JSON.stringify(user).replace(/'/g, "&#39;") %>' />
     </body>
 </html>
 <script>
     const socket = io("http://localhost:3000");
 
-    // 📌 Khi mở trang web, xác định vai trò
-    const isAdmin = confirm("Bạn có phải là Admin không?");
-    if (isAdmin) {
-        socket.emit("register-role", "admin");
-    } else {
-        socket.emit("register-role", "user");
-    }
+    const userData = <%- JSON.stringify(user) %>;
+    console.log(userData);
 
-    // 📌 Khi có thông báo mới, chỉ Admin mới nhận được
-    socket.on("new-alert", (data) => {
-        console.log("📢 New Notification for Admin:", data);
-        addNotificationToDropdown(data);
+    socket.emit("register-user", userData._id);
+
+    // Khi nhận được thông báo từ server qua socket
+    socket.on("receiveNotification", (notification) => {
+        // Gọi hàm renderNotifications để hiển thị thông báo ngay lập tức
+        renderNotifications([notification], true); // true để thêm thông báo mới vào đầu danh sách
     });
 
-    function addNotificationToDropdown(data) {
+    // Hàm tải thông báo từ API
+    function loadNotifications() {
+        fetch(`http://localhost:3000/api/notifications/${userData._id}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    renderNotifications(data.notifications);
+                }
+            })
+            .catch((error) =>
+                console.error("Error loading notifications:", error)
+            );
+    }
+
+    // Hàm hiển thị thông báo
+    function renderNotifications(notifications, prepend = false) {
         const notificationList = document.getElementById("notificationList");
         const notificationCount = document.getElementById("notificationCount");
 
-        const newNotification = document.createElement("a");
-        newNotification.href = "#";
-        newNotification.classList.add("iq-sub-card");
-        newNotification.innerHTML = `
-        <div class="media">
-            <div class="media-body">
-                <h6>${data.sender}</h6>
-                <small>${data.reason}</small>
-            </div>
-        </div>
-    `;
+        notificationCount.innerText =
+            parseInt(notificationCount.innerText) + notifications.length;
 
-        notificationList.prepend(newNotification);
-        notificationCount.textContent =
-            parseInt(notificationCount.textContent) + 1;
+        notifications.forEach((noti) => {
+            console.log(noti);
+
+            const item = `
+            <a href="#" class="iq-sub-card">
+                <div class="media align-items-center cust-card py-3 border-bottom">
+                    <div class="">
+                        <img class="avatar-50 rounded-small" src="${noti.user.avatar}" alt="User" />
+                    </div>
+                    <div class="media-body ml-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">${
+                                noti.user?.name || "Unknown"
+                            }</h6>
+                            <small class="text-dark"><b>${new Date(noti.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</b></small>
+
+                        </div>
+                        <small class="mb-0">
+                            <b>Reason:</b> ${ noti.reason || "No reason provided" }<br>
+                            <b>New Deadline:</b> ${ new Date(noti.date_extend).toLocaleDateString() }<br>
+                            <b>Task:</b> ${ noti.task_id.title } <br>
+                        </small>
+                    </div>
+                </div>
+            </a>
+        `;
+
+            if (prepend) {
+                notificationList.insertAdjacentHTML("afterbegin", item); // Thêm vào đầu danh sách
+            } else {
+                notificationList.innerHTML += item; // Thêm vào cuối danh sách
+            }
+        });
     }
+
+    // Gọi loadNotifications khi trang mở lại
+    window.onload = () => {
+        loadNotifications();
+    };
 </script>
