@@ -67,13 +67,15 @@
                                                         <div
                                                             class="form-group mb-0"
                                                         >
-                                                            <input
-                                                                type="search"
-                                                                class="form-control"
-                                                                id="exampleInputSearch"
-                                                                placeholder="Search"
-                                                                aria-controls="user-list-table"
-                                                            />
+                                                        <input
+                                                        type="search"
+                                                        class="form-control"
+                                                        id="exampleInputSearch"
+                                                        placeholder="Search"
+                                                        aria-controls="user-list-table"
+                                                        onkeyup="search()"
+                                                    />
+                                                    
                                                         </div>
                                                     </form>
                                                 </div>
@@ -526,6 +528,14 @@
     </body>
 
     <script>
+      function search() {
+    const searchInput = document.getElementById("exampleInputSearch").value.toLowerCase();
+    const filteredAccounts = listAccount.filter(account =>
+        account.name.toLowerCase().includes(searchInput)
+    );
+    render(filteredAccounts);
+}
+
         // action loading
         function showLoading() {
             document.getElementById("loading").style.display = "block";
