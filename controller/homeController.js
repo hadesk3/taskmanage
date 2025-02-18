@@ -66,3 +66,27 @@ export const getAddUserPage = (req, res) => {
         page: "lecturer/add",
     });
 };
+
+export const getReportPage = (req, res) => {
+    const title = "Report";
+    res.render("report/index", {
+        title: title,
+        page: "report",
+    });
+};
+
+export const getNotificationPage = (req, res) => {
+    const title = "Notification";
+    res.render("notification/index", {
+        title: title,
+        page: "notification",
+    });
+};
+
+export const getExtendFormPage = (req, res) => {
+    const title = "Extend Form";
+    res.render("task/extend-form", {
+        title: title,
+        page: "extend",
+    });
+};

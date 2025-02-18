@@ -972,7 +972,7 @@
                                         <p id="fileInfo">
                                             <a href="${
                                                 task.media
-                                            }" target="_blank">📂 Xem file đính kèm</a>    
+                                            }" target="_blank">📂 See attached file</a>    
                                         </p>
                                     </div>
                                 </div>
@@ -1375,27 +1375,41 @@
         }
 
         function sendNotiExtend() {
-            const reason = document.getElementById("extendTaskReason").value;
-            const dateExtend = document.getElementById("dateExtend").value;
-            const taskId = document.getElementById("delid").value;
-            const task = listTasks.find((p) => p._id === taskId);
-            console.log(task.title);
+            try {
+                displayLoading();
+                const reason =
+                    document.getElementById("extendTaskReason").value;
+                const dateExtend = document.getElementById("dateExtend").value;
+                const taskId = document.getElementById("delid").value;
+                const task = listTasks.find((p) => p._id === taskId);
+                console.log(task.title);
 
-            if (!reason || !dateExtend) {
-                alert("Please fill in all fields!");
-                return;
+                if (!reason || !dateExtend) {
+                    alert("Please fill in all fields!");
+                    return;
+                }
+
+                const extendData = {
+                    taskId: taskId,
+                    reason: reason,
+                    dateExtend: dateExtend,
+                    user: sender,
+                    title: task.title,
+                };
+
+                socket.emit("send-extend-notification", extendData);
+                hideLoading();
+                clearInputExtend();
+            } catch (error) {
+                console.log(error);
+                hideLoading();
             }
+        }
 
-            const extendData = {
-                taskId: taskId,
-                reason: reason,
-                dateExtend: dateExtend,
-                user: sender,
-                title: task.title,
-            };
-
-            socket.emit("send-extend-notification", extendData);
-            alert("Extend request sent!");
+        function clearInputExtend() {
+            document.getElementById("extendTaskReason").value = "";
+            document.getElementById("dateExtend").value = "";
+            document.getElementById("proofExtend").value = "";
         }
     </script>
 </html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+        <link rel="stylesheet" href="/css/backend-plugin.min.css" />
+        <link rel="stylesheet" href="/css/backend.css?v=1.0.0" />
+        <link
+            rel="stylesheet"
+            href="/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css"
+        />
+        <link rel="stylesheet" href="/vendor/remixicon/fonts/remixicon.css" />
+
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-calendar/dist/tui-calendar.css"
+        />
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-date-picker/dist/tui-date-picker.css"
+        />
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css"
+        />
+    </head>
+    <body>
+        <div id="loading">
+            <div id="loading-center"></div>
+        </div>
+        <div class="content-page">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-12">
+                        <div class="card">
+                            <div
+                                class="card-header d-flex justify-content-between"
+                            >
+                                <div class="header-title">
+                                    <h4 class="card-title">Extend Time Form</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="from">From:</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="from"
+                                            disabled
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="taskTitle"
+                                            >Task title:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="taskTitle"
+                                            disabled
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dateExtend"
+                                            >Date extend:</label
+                                        >
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            id="dateExtend"
+                                            disabled
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reason">Reason:</label>
+                                        <textarea
+                                            id="reason"
+                                            class="form-control"
+                                            disabled
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="proof">Proof:</label>
+                                        <a id="proof" href="#"
+                                            >📂 See attached file
+                                        </a>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        onclick="editDateTask()"
+                                    >
+                                        Accept
+                                    </button>
+                                    <button type="submit" class="btn bg-danger">
+                                        Refuse
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        // show loading
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+        // hide loading
+        function hideLoading() {
+            document.getElementById("loading").style.display = "none";
+        }
+
+        const notiId = window.location.pathname.split("/").pop();
+        let task = {};
+
+        // render
+        const render = (noti) => {
+            document.getElementById("from").value = noti.user.name;
+            document.getElementById("taskTitle").value = noti.task_id.title;
+            const formatDate = new Date(noti.date_extend)
+                .toISOString()
+                .split("T")[0];
+            document.getElementById("dateExtend").value = formatDate;
+            document.getElementById("reason").value = noti.reason;
+            document.getElementById("proof").href = noti.proof;
+        };
+        //get notification
+        const getNotification = async () => {
+            try {
+                const response = await fetch(`/api/notification/${notiId}`);
+                const data = await response.json();
+                task = data.data[0].task_id;
+                render(data.data[0]);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        const init = async () => {
+            showLoading();
+            await getNotification();
+            hideLoading();
+        };
+        init();
+
+        function editDateTask(event) {
+            try {
+                showLoading();
+                const dateExtend = document.getElementById("dateExtend").value;
+                const data = {
+                    deadline: dateExtend,
+                };
+                console.log("hi binh");
+
+                fetch(`http://localhost:3000/api/tasks/${task._id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Failed to update task");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("Task created:", data);
+                        hideLoading();
+                        window.location.href = "/notification";
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        hideLoading();
+                    });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    </script>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+        <link rel="stylesheet" href="/css/backend-plugin.min.css" />
+        <link rel="stylesheet" href="/css/backend.css?v=1.0.0" />
+        <link
+            rel="stylesheet"
+            href="/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css"
+        />
+        <link rel="stylesheet" href="/vendor/remixicon/fonts/remixicon.css" />
+
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-calendar/dist/tui-calendar.css"
+        />
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-date-picker/dist/tui-date-picker.css"
+        />
+        <link
+            rel="stylesheet"
+            href="/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css"
+        />
+
+        <style>
+            .space-y-4 {
+                display: flex;
+                flex-direction: column;
+                gap: 10px; /* Khoảng cách giữa các thông báo */
+            }
+            /* Thêm khoảng cách giữa checkbox và phần nội dung */
+            .notification-checkbox {
+                width: 18px;
+                height: 18px;
+                accent-color: #007bff; /* Màu xanh đẹp */
+                cursor: pointer;
+                margin-right: 12px;
+                align-self: center; /* Đảm bảo checkbox căn giữa với nội dung */
+            }
+
+            /* Điều chỉnh cách bố trí cho .notification-item */
+            .notification-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease-in-out,
+                    box-shadow 0.2s ease-in-out;
+            }
+
+            /* Thông báo đã đọc */
+            .notification-item.read {
+                background-color: #f0f0f0; /* Màu xám nhạt để phân biệt */
+                opacity: 0.8;
+            }
+
+            /* Giảm độ sáng của text */
+            .notification-item.read .notification-text h3,
+            .notification-item.read .notification-text p,
+            .notification-item.read .notification-text span {
+                color: #777; /* Màu xám nhạt */
+            }
+
+            /* Thông báo chưa đọc */
+            .notification-item.unread {
+                background-color: white; /* Màu trắng mặc định */
+                font-weight: bold;
+            }
+
+            /* Điều chỉnh cách căn chỉnh các phần tử bên trong notification-content */
+            .notification-content {
+                display: flex;
+                align-items: center;
+                flex: 1; /* Để content chiếm không gian còn lại */
+            }
+
+            /* Các kiểu cho notification-icon và text không thay đổi */
+            .notification-icon {
+                background-color: #007bff;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                margin-right: 15px;
+            }
+
+            .notification-text h3 {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+            }
+
+            .notification-text p {
+                font-size: 14px;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .notification-text span {
+                font-size: 12px;
+                color: #888;
+            }
+
+            /* Các kiểu cho button và hover vẫn giữ nguyên */
+            .notification-button {
+                background-color: #007bff;
+                color: white;
+                padding: 6px 12px;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: 0.3s;
+                border: none;
+            }
+
+            .notification-button:hover {
+                background-color: #0056b3;
+            }
+
+            .notification-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .dropdown-menu-notification {
+                left: 0 !important;
+                right: 0 !important;
+            }
+        </style>
+    </head>
+    <body class=" ">
+        <!-- loader Start -->
+        <div id="loading">
+            <div id="loading-center"></div>
+        </div>
+
+        <!-- wrapper start -->
+        <div class="wrapper">
+            <div class="content-page">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div
+                                        class="d-flex flex-wrap align-items-center justify-content-between breadcrumb-content"
+                                    >
+                                        <!-- Tiêu đề "Notification" và nút Select -->
+                                        <div class="d-flex align-items-center">
+                                            <h5 class="mb-0 mr-3">
+                                                Notification
+                                            </h5>
+                                            <!-- Thêm margin-right để cách nút Select -->
+
+                                            <!-- Nút Select -->
+                                            <div
+                                                class="dropdown dropdown-notification-filter"
+                                            >
+                                                <div
+                                                    class="dropdown-toggle"
+                                                    id="dropdownMenuButton"
+                                                    data-toggle="dropdown"
+                                                >
+                                                    <button
+                                                        class="btn text-center btn-primary"
+                                                    >
+                                                        Select
+                                                        <i
+                                                            class="ri-arrow-down-s-line ml-2 mr-0"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class="dropdown-menu w-100 dropdown-menu-notification"
+                                                    aria-labelledby="dropdownMenuButton"
+                                                >
+                                                    <a
+                                                        class="dropdown-item filter-action-option"
+                                                        href="#"
+                                                        data-action="read"
+                                                        >Mark as Read</a
+                                                    >
+                                                    <a
+                                                        class="dropdown-item filter-action-option"
+                                                        href="#"
+                                                        data-action="unread"
+                                                        >Mark as Unread</a
+                                                    >
+                                                    <a
+                                                        class="dropdown-item filter-action-option"
+                                                        href="#"
+                                                        data-action="delete"
+                                                        >Delete</a
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Các thành phần còn lại (nếu có) -->
+                                        <div class="d-flex align-items-center">
+                                            <!-- Ví dụ: Filter (nếu cần giữ lại) -->
+                                            <div
+                                                class="dropdown dropdown-notification-filter mr-3"
+                                            >
+                                                <div
+                                                    class="dropdown-toggle"
+                                                    id="dropdownMenuButton2"
+                                                    data-toggle="dropdown"
+                                                >
+                                                    <div class="btn bg-body">
+                                                        <span class="h6"
+                                                            >Filter:</span
+                                                        >
+                                                        <span
+                                                            id="selectedFilter"
+                                                            >All</span
+                                                        >
+                                                        <i
+                                                            class="ri-arrow-down-s-line ml-2 mr-0"
+                                                        ></i>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="dropdown-menu w-100 dropdown-menu-notification dropdown-menu-right"
+                                                    aria-labelledby="dropdownMenuButton2"
+                                                >
+                                                    <a
+                                                        class="dropdown-item filter-option"
+                                                        data-filter="all"
+                                                        href="#"
+                                                    >
+                                                        <i
+                                                            class="ri-list-check-2 mr-2"
+                                                        ></i>
+                                                        All
+                                                    </a>
+                                                    <a
+                                                        class="dropdown-item filter-option"
+                                                        data-filter="read"
+                                                        href="#"
+                                                    >
+                                                        <i
+                                                            class="ri-eye-line mr-2"
+                                                        ></i>
+                                                        Read
+                                                    </a>
+                                                    <a
+                                                        class="dropdown-item filter-option"
+                                                        data-filter="unread"
+                                                        href="#"
+                                                    >
+                                                        <i
+                                                            class="ri-eye-off-line mr-2"
+                                                        ></i>
+                                                        Unread
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- task-->
+                        <div class="col-lg-12">
+                            <div class="space-y-4"></div>
+                        </div>
+
+                        <!-- Page end  -->
+                    </div>
+                </div>
+            </div>
+            <!-- Wrapper End-->
+        </div>
+    </body>
+
+    <script>
+        // display loading
+        function displayLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+
+        // hide loading
+        function hideLoading() {
+            document.getElementById("loading").style.display = "none";
+        }
+
+        // manage notification
+        let listnotification = [];
+
+        const render = (notifications) => {
+            const notificationContainer = document.querySelector(".space-y-4");
+            notificationContainer.innerHTML = "";
+
+            notifications.forEach((notification) => {
+                const notificationItem = document.createElement("div");
+                notificationItem.classList.add("notification-item");
+
+                if (notification.isRead) {
+                    notificationItem.classList.add("read");
+                } else {
+                    notificationItem.classList.add("unread");
+                }
+
+                // Tạo checkbox
+                const notificationCheckbox = document.createElement("input");
+                notificationCheckbox.type = "checkbox";
+                notificationCheckbox.classList.add("notification-checkbox");
+                notificationCheckbox.id = `notification-${notification._id}`;
+                notificationCheckbox.dataset.id = notification._id;
+
+                const notificationContent = document.createElement("div");
+                notificationContent.classList.add("notification-content");
+
+                const notificationIcon = document.createElement("img");
+                notificationIcon.classList.add("notification-icon");
+                notificationIcon.src = notification.user.avatar;
+                notificationIcon.alt = notification.user.name;
+
+                const notificationText = document.createElement("div");
+                notificationText.classList.add("notification-text");
+
+                const notificationTitle = document.createElement("h3");
+                if (notification.alert_type === "Extend") {
+                    notificationTitle.innerText =
+                        "Extend Alert from " + notification.user.name;
+                }
+
+                const notificationDescription = document.createElement("p");
+                notificationDescription.innerText = notification.reason;
+
+                const notificationTime = document.createElement("span");
+                const timestamp = notification.timestamp;
+                const date = new Date(timestamp);
+                const formattedTime = date.toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                });
+
+                notificationTime.innerText = formattedTime;
+                const notificationButton = document.createElement("a");
+                notificationButton.classList.add("btn", "btn-light");
+                notificationButton.innerText = "Details";
+                notificationButton.href = `/notification/${notification._id}`;
+
+                notificationText.appendChild(notificationTitle);
+                notificationText.appendChild(notificationDescription);
+                notificationText.appendChild(notificationTime);
+
+                notificationContent.appendChild(notificationIcon);
+                notificationContent.appendChild(notificationText);
+
+                // Đặt checkbox lên đầu
+                notificationItem.appendChild(notificationCheckbox);
+                notificationItem.appendChild(notificationContent);
+                notificationItem.appendChild(notificationButton);
+
+                notificationContainer.appendChild(notificationItem);
+            });
+
+            hideLoading();
+            attachCheckboxListeners();
+        };
+
+        const formatTime = (timestamp) => {
+            const date = new Date(timestamp);
+            return date.toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false, // Định dạng 24 giờ
+            });
+        };
+
+        const getNotification = async () => {
+            displayLoading();
+            const url = `${window.location.origin}/api/notifications/${userData._id}`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                listnotification = data.notifications;
+
+                render(data.notifications);
+                return data.notifications;
+            } catch (error) {
+                console.log(error);
+                hideLoading();
+            }
+        };
+
+        const init = async () => {
+            const res = await getNotification();
+        };
+        document.addEventListener("DOMContentLoaded", () => {
+            const filterOptions = document.querySelectorAll(".filter-option");
+            let currentFilter = "all";
+
+            filterOptions.forEach((option) => {
+                option.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    currentFilter = option.getAttribute("data-filter");
+                    document.getElementById("selectedFilter").innerText =
+                        option.innerText;
+
+                    applyFilter(currentFilter);
+                });
+            });
+        });
+
+        const applyFilter = async (filter) => {
+            // const notifications = await getNotification();
+            // console.log(notifications);
+
+            let filteredNotifications = [];
+
+            if (filter === "read") {
+                filteredNotifications = listnotification.filter(
+                    (n) => n.isRead
+                );
+            } else if (filter === "unread") {
+                filteredNotifications = listnotification.filter(
+                    (n) => !n.isRead
+                );
+            } else {
+                filteredNotifications = listnotification;
+            }
+
+            render(filteredNotifications);
+        };
+
+        // Lắng nghe sự kiện của checkbox
+        function attachCheckboxListeners() {
+            const checkboxes = document.querySelectorAll(
+                ".notification-checkbox"
+            );
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", function () {
+                    console.log(
+                        `Checkbox ${this.dataset.id} is ${
+                            this.checked ? "checked" : "unchecked"
+                        }`
+                    );
+                });
+            });
+        }
+
+        // Xử lý khi chọn các hành động từ dropdown
+        document.querySelectorAll(".filter-action-option").forEach((option) => {
+            option.addEventListener("click", function (event) {
+                event.preventDefault();
+                const action = this.dataset.action;
+                handleBulkAction(action);
+            });
+        });
+
+        async function handleBulkAction(action) {
+            const selectedCheckboxes = document.querySelectorAll(
+                ".notification-checkbox:checked"
+            );
+            if (selectedCheckboxes.length === 0) {
+                alert("Please select at least one notification.");
+                return;
+            }
+
+            const ids = Array.from(selectedCheckboxes).map(
+                (checkbox) => checkbox.dataset.id
+            );
+
+            let url = "";
+            switch (action) {
+                case "read":
+                    url = "/api/notifications/mark-as-read";
+                    console.log("Mark as read");
+
+                    break;
+                case "unread":
+                    url = "/api/notifications/mark-as-unread";
+                    break;
+                case "delete":
+                    url = "/api/notifications/delete";
+                    break;
+                default:
+                    console.log("Unknown action.");
+                    return;
+            }
+
+            try {
+                displayLoading();
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ids }),
+                });
+
+                const result = await response.json();
+                console.log(result.message);
+
+                if (action === "delete") {
+                    selectedCheckboxes.forEach((checkbox) =>
+                        checkbox.closest(".notification-item").remove()
+                    );
+                }
+                init();
+                hideLoading();
+            } catch (error) {
+                console.error("Error:", error);
+                hideLoading();
+            }
+        }
+
+        init();
+    </script>
+</html>

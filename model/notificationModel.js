@@ -13,7 +13,8 @@ const alertSchema = new Schema({
     sent_to: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Admin nhận thông báo
     timestamp: { type: Date, default: Date.now },
     isRead: { type: Boolean, default: false },
-    user: { type: Schema.Types.ObjectId, ref: "User" }, // Người gửi yêu cầu
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    proof: { type: String },
 });
 
 const Alert = mongoose.model("Alert", alertSchema);

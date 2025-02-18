@@ -6,6 +6,9 @@ import {
     getTaskPage,
     getUserProfilePage,
     getUserEditProfile,
+    getReportPage,
+    getNotificationPage,
+    getExtendFormPage,
 } from "../controller/homeController.js";
 
 const router = express.Router();
@@ -22,6 +25,9 @@ router.get("/project", getProjectPage);
 // [GET] /task/:id
 router.get("/task/:id", getTaskPage);
 
+// [GET] /extend-form
+router.get("/notification/:id", getExtendFormPage);
+
 // [GET] /lecturer
 router.get("/lecturer", getLecturerPage);
 
@@ -30,5 +36,11 @@ router.get("/user-profile", getUserProfilePage);
 
 // [GET] /user-profile-edit
 router.get("/edit-profile", getUserEditProfile);
+
+// [GET] /report
+router.get("/report", getReportPage);
+
+// [GET] /notification
+router.get("/notification", getNotificationPage);
 
 export default router;

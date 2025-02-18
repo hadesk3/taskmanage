@@ -167,6 +167,13 @@
                                                     class="px-3 pt-0 pb-0 sub-card"
                                                     id="notificationList"
                                                 ></div>
+                                                <a
+                                                    class="right-ic btn btn-primary btn-block position-relative p-2"
+                                                    href="/notification"
+                                                    role="button"
+                                                >
+                                                    View All
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -283,7 +290,6 @@
     const socket = io("http://localhost:3000");
 
     const userData = <%- JSON.stringify(user) %>;
-    console.log(userData);
 
     socket.emit("register-user", userData._id);
 
@@ -316,8 +322,6 @@
             parseInt(notificationCount.innerText) + notifications.length;
 
         notifications.forEach((noti) => {
-            console.log(noti);
-
             const item = `
             <a href="#" class="iq-sub-card">
                 <div class="media align-items-center cust-card py-3 border-bottom">
