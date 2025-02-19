@@ -359,15 +359,17 @@
                                                 type="file"
                                                 class="custom-file-input"
                                                 id="proofExtend"
+                                                accept="image/png, image/jpeg, image/gif"
                                             />
                                             <label
                                                 class="custom-file-label"
                                                 for="proofExtend"
-                                                >Upload proof</label
+                                                >Acept image only</label
                                             >
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-12">
                                     <div
                                         class="d-flex flex-wrap align-items-ceter justify-content-center mt-4"
@@ -775,7 +777,8 @@
                                     <div
                                         class="media align-items-center mt-md-0 mt-3"
                                     >
-                                        <button
+                                        <% if (user.role === 'lecturer') { %>
+                                            <button
                                             class="btn bg-secondary-light mr-3"
                                             type="button"
                                             data-bs-toggle="modal"
@@ -784,9 +787,10 @@
                                                 task._id
                                             }', '${task.title}')"
                                         
-                                        >
-                                        Extend time
-                                        </button>
+                                            >
+                                                Extend time
+                                            </button>
+                                        <% } %>
                                         <% if (user.role === 'headofsubject') { %>
                                             <button
                                                 class="btn bg-secondary-light mr-3"
@@ -838,16 +842,11 @@
                                         <div
                                             class="custom-control custom-checkbox custom-control-inline"
                                         >
-                                            <input
-                                                type="checkbox"
-                                                class="custom-control-input"
-                                                id="customCheck05"
-                                            />
+                                            
                                             <label
                                                 class="custom-control-label h5"
                                                 for="customCheck05"
-                                                >Mark as
-                                                done</label
+                                                >Details</label
                                             >
                                         </div>
                                     </div>
@@ -873,7 +872,7 @@
                                                 >
                                                     <div class="form-group mb-0">
                                                         <label for="exampleInputText2" class="h5">Members</label>
-                                                        <select name="type" class="selectpicker form-control" data-style="py-0" id="membersEditDropdown">
+                                                        <select name="type" class="selectpicker form-control" data-style="py-0" id="membersEditDropdown" disabled>
                                                             ${membersList}
                                                         </select>
                                                     </div>
@@ -895,6 +894,7 @@
                                                             class="form-control"
                                                             id="exampleInputText3"
                                                             value="${formattedEndDate}"
+                                                            disabled
                                                         />
                                                     </div>
                                                 </div>
@@ -953,22 +953,7 @@
                                             class="h5"
                                             >Attachments</label
                                         >
-                                        <div
-                                            class="custom-file"
-                                        >
-                                            <input
-                                                type="file"
-                                                class="custom-file-input"
-                                                id="inputGroupFile001"
-
-                                            />
-                                            <label
-                                                class="custom-file-label"
-                                                for="inputGroupFile001"
-                                                >Upload
-                                                media</label
-                                            >
-                                        </div>
+                                        
                                         <p id="fileInfo">
                                             <a href="${
                                                 task.media
@@ -1374,13 +1359,18 @@
             document.getElementById("delid").value = taskId;
         }
 
-        function sendNotiExtend() {
+        async function sendNotiExtend() {
             try {
                 displayLoading();
                 const reason =
                     document.getElementById("extendTaskReason").value;
                 const dateExtend = document.getElementById("dateExtend").value;
                 const taskId = document.getElementById("delid").value;
+                const file = document.getElementById("proofExtend").files[0];
+                let imageUrl = undefined;
+                if (file) {
+                    imageUrl = await uploadImage(file, "lecturer");
+                }
                 const task = listTasks.find((p) => p._id === taskId);
                 console.log(task.title);
 
@@ -1395,6 +1385,7 @@
                     dateExtend: dateExtend,
                     user: sender,
                     title: task.title,
+                    imageUrl: imageUrl,
                 };
 
                 socket.emit("send-extend-notification", extendData);

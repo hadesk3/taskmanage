@@ -33,12 +33,43 @@ export const getNotifications = async (req, res) => {
 export const getNotificationById = async (req, res) => {
     try {
         const alerId = req.params.id;
-        const notifications = await Alert.find({ _id: alerId })
-            .populate("task_id", "title description") // Lấy thông tin về tên và mô tả nhiệm vụ
-            .populate("user", "name avatar") // Lấy thông tin người gửi
-            .populate("sent_to", "name avatar"); // Lấy thông tin người nhận
+        const alerts = await Alert.find({ _id: alerId })
+            .populate({
+                path: "task_id",
+                populate: {
+                    path: "project_id",
+                    model: "Project",
+                },
+            })
+            .populate("user", "name avatar") // Lấy thông tin người tạo alert
+            .populate("sent_to", "name email"); // Lấy thông tin admin nhận alert
 
-        res.status(200).json({ success: true, data: notifications });
+        // Định dạng lại dữ liệu để dễ đọc
+        const formattedAlerts = alerts.map((alert) => ({
+            _id: alert._id,
+            alert_type: alert.alert_type,
+            reason: alert.reason,
+            date_extend: alert.date_extend,
+            timestamp: alert.timestamp,
+            isRead: alert.isRead,
+            proof: alert.proof,
+            user: alert.user,
+            sent_to: alert.sent_to,
+            task: alert.task_id
+                ? {
+                      _id: alert.task_id._id,
+                      title: alert.task_id.title,
+                      project: alert.task_id.project_id
+                          ? {
+                                _id: alert.task_id.project_id._id,
+                                name: alert.task_id.project_id.name,
+                            }
+                          : null,
+                  }
+                : null,
+        }));
+
+        res.status(200).json({ success: true, data: formattedAlerts });
     } catch (error) {
         res.status(500).json({ success: false, message: "Lỗi server" });
     }

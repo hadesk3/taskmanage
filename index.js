@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
 
     // User gửi yêu cầu gia hạn thời gian (Gửi đến admin)
     socket.on("send-extend-notification", async (data) => {
-        const { taskId, user, reason, dateExtend, title } = data;
+        const { taskId, user, reason, dateExtend, title, imageUrl } = data;
 
         const newAlert = new Notification({
             task_id: taskId,
@@ -105,18 +105,21 @@ io.on("connection", (socket) => {
             date_extend: dateExtend,
             sent_to: ADMIN_ID, // Gửi đến admin
             user: user._id, // Người gửi yêu cầu
+            proof: imageUrl,
         });
 
-        await newAlert.save();
+        const result = await newAlert.save();
 
         // Gửi thông báo cho admin nếu online
         if (onlineUsers.has(ADMIN_ID)) {
             io.to(onlineUsers.get(ADMIN_ID)).emit("receiveNotification", {
+                _id: result._id,
                 senderId: data.senderId,
                 reason: reason,
-                timestamp: new Date().toISOString(),
+                timestamp: result.timestamp,
                 user: data.user,
                 task_id: { title }, // Thông tin người gửi
+                date_extend: dateExtend,
             });
         }
     });
@@ -137,6 +140,29 @@ io.on("connection", (socket) => {
         // Gửi thông báo cho user nếu họ online
         if (onlineUsers.has(userId)) {
             io.to(onlineUsers.get(userId)).emit(
+                "receive-notification",
+                newAlert
+            );
+        }
+    });
+
+    // Admin gửi thông báo đến user cụ thể
+    socket.on("add-user-project", async (data) => {
+        const { user, message, projectId } = data;
+
+        const newAlert = new Alert({
+            alert_type: "Assign",
+            reason: message,
+            sent_to: user._id, // Gửi đến user cụ thể
+            user: ADMIN_ID, // Admin là người gửi
+            project_id: projectId,
+        });
+
+        await newAlert.save();
+
+        // Gửi thông báo cho user nếu họ online
+        if (onlineUsers.has(user._id)) {
+            io.to(onlineUsers.get(user._id)).emit(
                 "receive-notification",
                 newAlert
             );

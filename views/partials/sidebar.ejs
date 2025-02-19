@@ -147,6 +147,7 @@
                                 <span class="ml-4">Notification</span>
                             </a>
                         </li>
+                        <% if (user.role === 'headofsubject') { %>
                         <li class="">
                             <a href="/lecturer" class="svg-icon">
                                 <svg
@@ -169,7 +170,8 @@
                                 <span class="ml-4">Lecturers</span>
                             </a>
                         </li>
-                        <li class="">
+                        <% } %>
+                        <!-- <li class="">
                             <a
                                 href="../backend/page-desk.html"
                                 class="svg-icon"
@@ -201,7 +203,7 @@
                                 </svg>
                                 <span class="ml-4">Desk</span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
                 <div

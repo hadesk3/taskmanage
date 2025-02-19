@@ -57,6 +57,17 @@
                                         />
                                     </div>
                                     <div class="form-group">
+                                        <label for="projectTitle"
+                                            >Project title:</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="projectTitle"
+                                            disabled
+                                        />
+                                    </div>
+                                    <div class="form-group">
                                         <label for="taskTitle"
                                             >Task title:</label
                                         >
@@ -66,6 +77,12 @@
                                             id="taskTitle"
                                             disabled
                                         />
+                                        <a
+                                            id="taskLink"
+                                            href="#"
+                                            target="_blank"
+                                            >Open Link</a
+                                        >
                                     </div>
                                     <div class="form-group">
                                         <label for="dateExtend"
@@ -89,7 +106,7 @@
 
                                     <div class="form-group">
                                         <label for="proof">Proof:</label>
-                                        <a id="proof" href="#"
+                                        <a id="proof" href="#" target="_blank"
                                             >📂 See attached file
                                         </a>
                                     </div>
@@ -101,7 +118,11 @@
                                     >
                                         Accept
                                     </button>
-                                    <button type="submit" class="btn bg-danger">
+                                    <button
+                                        type="button"
+                                        class="btn bg-danger"
+                                        onclick="window.location.href = '/notification'"
+                                    >
                                         Refuse
                                     </button>
                                 </form>
@@ -129,7 +150,13 @@
         // render
         const render = (noti) => {
             document.getElementById("from").value = noti.user.name;
-            document.getElementById("taskTitle").value = noti.task_id.title;
+            document.getElementById("projectTitle").value =
+                noti.task.project.name;
+            document.getElementById("taskTitle").value = noti.task.title;
+            document.getElementById(
+                "taskLink"
+            ).href = `${window.location.origin}/task/${noti.task.project._id}`;
+
             const formatDate = new Date(noti.date_extend)
                 .toISOString()
                 .split("T")[0];
@@ -142,7 +169,7 @@
             try {
                 const response = await fetch(`/api/notification/${notiId}`);
                 const data = await response.json();
-                task = data.data[0].task_id;
+                task = data.data[0].task;
                 render(data.data[0]);
             } catch (error) {
                 console.error(error);
@@ -159,10 +186,11 @@
             try {
                 showLoading();
                 const dateExtend = document.getElementById("dateExtend").value;
+                console.log(task);
+
                 const data = {
                     deadline: dateExtend,
                 };
-                console.log("hi binh");
 
                 fetch(`http://localhost:3000/api/tasks/${task._id}`, {
                     method: "PUT",

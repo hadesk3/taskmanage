@@ -46,8 +46,13 @@
                                     <div
                                         class="d-flex flex-wrap align-items-center justify-content-between breadcrumb-content"
                                     >
-                                    <h5 onclick="window.location.reload();" style="cursor: pointer;">Your Projects</h5>
-                                    <div
+                                        <h5
+                                            onclick="window.location.reload();"
+                                            style="cursor: pointer"
+                                        >
+                                            Your Projects
+                                        </h5>
+                                        <div
                                             class="d-flex flex-wrap align-items-center justify-content-between"
                                         >
                                             <div
@@ -62,7 +67,11 @@
                                                         <span class="h6"
                                                             >Status :</span
                                                         >
-                                                       <i
+                                                        <span
+                                                            id="selectedFilter"
+                                                            >All</span
+                                                        >
+                                                        <i
                                                             class="ri-arrow-down-s-line ml-2 mr-0"
                                                         ></i>
                                                     </div>
@@ -72,13 +81,13 @@
                                                     aria-labelledby="dropdownMenuButton03"
                                                 >
                                                     <a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    ><i
-                                                        class="ri-star-fill"
-                                                    ></i
-                                                    >All</a
-                                                >
+                                                        class="dropdown-item"
+                                                        href="#"
+                                                        ><i
+                                                            class="ri-star-fill mr-2"
+                                                        ></i
+                                                        >All
+                                                    </a>
                                                     <a
                                                         class="dropdown-item"
                                                         href="#"
@@ -424,31 +433,35 @@
                 document.getElementById("loading").style.display = "none";
             }
             document.addEventListener("DOMContentLoaded", function () {
-    const statusDropdownItems = document.querySelectorAll(".status-dropdown .dropdown-item");
-    const statusButton = document.querySelector(".status-dropdown .btn span.h6");
-    let selectedStatus = "In Progress"; // Trạng thái mặc định
+                const statusDropdownItems = document.querySelectorAll(
+                    ".status-dropdown .dropdown-item"
+                );
+                const statusButton = document.querySelector(
+                    ".status-dropdown .btn span.h6"
+                );
+                let selectedStatus = "In Progress"; // Trạng thái mặc định
 
-    // Xử lý sự kiện click vào mỗi mục trong dropdown
-    statusDropdownItems.forEach((item) => {
-        item.addEventListener("click", function (event) {
-            event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+                // Xử lý sự kiện click vào mỗi mục trong dropdown
+                statusDropdownItems.forEach((item) => {
+                    item.addEventListener("click", function (event) {
+                        event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
 
-            selectedStatus = this.textContent.trim(); // Lấy trạng thái được chọn
-            statusButton.textContent = `Status: ${selectedStatus}`; // Cập nhật nút dropdown
+                        selectedStatus = this.textContent.trim(); // Lấy trạng thái được chọn
+                        statusButton.textContent = `Status: ${selectedStatus}`; // Cập nhật nút dropdown
 
-            filterProjectsByStatus(selectedStatus); // Lọc danh sách dự án
-        });
-    });
+                        filterProjectsByStatus(selectedStatus); // Lọc danh sách dự án
+                    });
+                });
 
-    // Hàm lọc danh sách dự án theo trạng thái
-    function filterProjectsByStatus(status) {
-        const filteredProjects = listProject.filter((project) => {
-            return status === "All" || project.status === status;
-        });
+                // Hàm lọc danh sách dự án theo trạng thái
+                function filterProjectsByStatus(status) {
+                    const filteredProjects = listProject.filter((project) => {
+                        return status === "All" || project.status === status;
+                    });
 
-        render(filteredProjects, listUser); // Cập nhật giao diện
-    }
-});
+                    render(filteredProjects, listUser); // Cập nhật giao diện
+                }
+            });
 
             const accountBody = document.getElementById("account-body");
 
@@ -768,8 +781,5 @@
                 window.location.href = `/task/${id}`;
             }
         </script>
-
-
-
     </body>
 </html>

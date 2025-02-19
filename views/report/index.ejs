@@ -29,52 +29,30 @@
             href="/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css"
         />
         <style>
-            body {
-                font-family: 'Arial', sans-serif;
-                background-color: #f4f7fc;
-                color: #333;
-            }
-        
             h1 {
                 text-align: center;
                 color: #333;
                 font-size: 2rem;
                 margin-bottom: 20px;
             }
-        
+
             .buttons {
                 display: flex;
                 justify-content: center;
                 margin-bottom: 20px;
             }
-        
-            button {
-                padding: 12px 20px;
-                margin-right: 10px;
-                cursor: pointer;
-                font-size: 1rem;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
-        
-            button:hover {
-                background-color: #0056b3;
-            }
-        
+
             #customDateRange {
                 display: none;
                 margin-top: 10px;
                 text-align: center;
             }
-        
+
             label {
                 font-size: 1rem;
                 margin-right: 10px;
             }
-        
+
             input[type="date"] {
                 padding: 8px;
                 margin-right: 10px;
@@ -82,11 +60,11 @@
                 border-radius: 5px;
                 font-size: 1rem;
             }
-        
+
             input[type="date"]:focus {
                 border-color: #007bff;
             }
-        
+
             #applyCustomRange {
                 padding: 10px 20px;
                 background-color: #28a745;
@@ -97,59 +75,49 @@
                 font-size: 1rem;
                 margin-top: 10px;
             }
-        
+
             #applyCustomRange:hover {
                 background-color: #218838;
             }
-        
+
             table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-top: 20px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
-        
-            th, td {
+
+            th,
+            td {
                 padding: 15px;
                 text-align: left;
                 border: 1px solid #ddd;
             }
-        
+
             th {
-                background-color: #007bff;
+                background-color: #51bbfe;
                 color: white;
                 font-size: 1rem;
             }
-        
+
             td {
                 background-color: #ffffff;
                 color: #555;
                 font-size: 1rem;
             }
-        
+
             td:hover {
                 background-color: #f1f1f1;
             }
-        
+
             tr:nth-child(even) td {
                 background-color: #f9f9f9;
             }
-        
+
             tr:hover td {
                 background-color: #e9ecef;
             }
-        
-            .wrapper {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-        
-            .container-fluid {
-                padding: 0 15px;
-            }
         </style>
-        
     </head>
     <body class="">
         <!-- loader Start -->
@@ -161,167 +129,242 @@
         <div class="wrapper">
             <div class="content-page">
                 <div class="container-fluid">
-                    <h1>Project List</h1>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div
+                                        class="d-flex flex-wrap align-items-center justify-content-between breadcrumb-content"
+                                    >
+                                        <div class="d-flex align-items-center">
+                                            <h5 class="mb-0 mr-3">Report</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="buttons">
-                        <button id="todayBtn">Today</button>
-                        <button id="yesterdayBtn">Yesterday</button>
-                        <button id="thisWeekBtn">This Week</button>
-                        <button id="thisMonthBtn">This Month</button>
-                        <button id="customBtn">Custom</button>
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="">
+                                        <button
+                                            class="btn btn-info mt-2"
+                                            id="todayBtn"
+                                        >
+                                            Today
+                                        </button>
+                                        <button
+                                            class="btn btn-info mt-2"
+                                            id="yesterdayBtn"
+                                        >
+                                            Yesterday
+                                        </button>
+                                        <button
+                                            class="btn btn-info mt-2"
+                                            id="thisWeekBtn"
+                                        >
+                                            This Week
+                                        </button>
+                                        <button
+                                            class="btn btn-info mt-2"
+                                            id="thisMonthBtn"
+                                        >
+                                            This Month
+                                        </button>
+                                        <button
+                                            class="btn btn-info mt-2"
+                                            id="customBtn"
+                                        >
+                                            Custom
+                                        </button>
+                                    </div>
+
+                                    <div id="customDateRange">
+                                        <label for="startDate"
+                                            >Select Start Date:
+                                        </label>
+                                        <input type="date" id="startDate" />
+                                        <label for="endDate"
+                                            >Select End Date:
+                                        </label>
+                                        <input type="date" id="endDate" />
+                                        <button id="applyCustomRange">
+                                            Apply
+                                        </button>
+                                    </div>
+
+                                    <table id="projectTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Project Name</th>
+                                                <th>Description</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Status</th>
+                                                <th>Completion Status</th>
+                                                <th>Lecturers</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div id="customDateRange">
-                        <label for="startDate">Select Start Date: </label>
-                        <input type="date" id="startDate">
-                        <label for="endDate">Select End Date: </label>
-                        <input type="date" id="endDate">
-                        <button id="applyCustomRange">Apply</button>
-                    </div>
-                    
-                    <table id="projectTable">
-                        <thead>
-                            <tr>
-                                <th>Project Name</th>
-                                <th>Description</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th>
-                                <th>Completion Status</th>
-                                <th>Lecturers</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be filled here from API -->
-                        </tbody>
-                    </table>
-                    
-                    <script>
-                        // Function to fetch data from the API
-                        async function fetchProjects() {
-                            try {
-                                const response = await fetch('http://localhost:3000/api/projects');
-                                const data = await response.json();
-                                return data.data.projectsWithCompletion;
-                            } catch (error) {
-                                console.error('Error fetching data:', error);
-                                return [];
-                            }
-                        }
-                    
-                        // Function to format the date from ISO to day/month/year format
-                        function formatDate(dateStr) {
-                            const date = new Date(dateStr);
-                            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-                        }
-                    
-                        // Function to display the projects
-                        function displayProjects(projects) {
-                            const tableBody = document.getElementById('projectTable').getElementsByTagName('tbody')[0];
-                            tableBody.innerHTML = ''; // Clear previous data
-                    
-                            projects.forEach(project => {
-                                const row = document.createElement('tr');
-                    
-                                // Create columns for each project
-                                row.innerHTML = `
-                                    <td>${project.name}</td>
-                                    <td>${project.description}</td>
-                                    <td>${formatDate(project.start_date)}</td>
-                                    <td>${formatDate(project.end_date)}</td>
-                                    <td>${project.status}</td>
-                                    <td>${project.completion}%</td>
-                                    <td>${project.lecturers.map(lecturer => lecturer.name).join(', ')}</td>
-                                `;
-                                tableBody.appendChild(row);
-                            });
-                        }
-                    
-                        // Function to get today's date
-                        function getToday() {
-                            return new Date().toISOString().split('T')[0];
-                        }
-                    
-                        // Function to get yesterday's date
-                        function getYesterday() {
-                            const date = new Date();
-                            date.setDate(date.getDate() - 1);
-                            return date.toISOString().split('T')[0];
-                        }
-                    
-                        // Function to get the start of this week
-                        function getStartOfWeek() {
-                            const date = new Date();
-                            const day = date.getDay();
-                            date.setDate(date.getDate() - day);
-                            return date.toISOString().split('T')[0];
-                        }
-                    
-                        // Function to get the start of this month
-                        function getStartOfMonth() {
-                            const date = new Date();
-                            date.setDate(1); // Set the date to 1
-                            return date.toISOString().split('T')[0];
-                        }
-                    
-                        // Function to filter projects by date range
-                        function filterProjectsByDateRange(startDate, endDate) {
-                            fetchProjects().then(projects => {
-                                const filteredProjects = projects.filter(project => {
-                                    const start = new Date(project.start_date);
-                                    const end = new Date(project.end_date);
-                                    return start >= new Date(startDate) && end <= new Date(endDate);
-                                });
-                                displayProjects(filteredProjects);
-                            });
-                        }
-                    
-                        // "Today" button
-                        document.getElementById('todayBtn').addEventListener('click', function() {
-                            const today = getToday();
-                            filterProjectsByDateRange(today, today);
-                        });
-                    
-                        // "Yesterday" button
-                        document.getElementById('yesterdayBtn').addEventListener('click', function() {
-                            const yesterday = getYesterday();
-                            filterProjectsByDateRange(yesterday, yesterday);
-                        });
-                    
-                        // "This Week" button
-                        document.getElementById('thisWeekBtn').addEventListener('click', function() {
-                            const startOfWeek = getStartOfWeek();
-                            const today = getToday();
-                            filterProjectsByDateRange(startOfWeek, today);
-                        });
-                    
-                        // "This Month" button
-                        document.getElementById('thisMonthBtn').addEventListener('click', function() {
-                            const startOfMonth = getStartOfMonth();
-                            const today = getToday();
-                            filterProjectsByDateRange(startOfMonth, today);
-                        });
-                    
-                        // "Custom" button
-                        document.getElementById('customBtn').addEventListener('click', function() {
-                            document.getElementById('customDateRange').style.display = 'block';
-                        });
-                    
-                        // "Apply Custom Range" button
-                        document.getElementById('applyCustomRange').addEventListener('click', function() {
-                            const startDate = document.getElementById('startDate').value;
-                            const endDate = document.getElementById('endDate').value;
-                            
-                            if (startDate && endDate) {
-                                filterProjectsByDateRange(startDate, endDate);
-                            }
-                            document.getElementById('customDateRange').style.display = 'none';
-                        });
-                    
-                        // Display all projects when the page loads
-                        fetchProjects().then(projects => {
-                            displayProjects(projects);
-                        });
-                    </script>
+                </div>
+            </div>
+        </div>
     </body>
+    <script>
+        // Function to fetch data from the API
+        async function fetchProjects() {
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/projects"
+                );
+                const data = await response.json();
+                return data.data.projectsWithCompletion;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                return [];
+            }
+        }
+
+        // Function to format the date from ISO to day/month/year format
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.getDate()}/${
+                date.getMonth() + 1
+            }/${date.getFullYear()}`;
+        }
+
+        // Function to display the projects
+        function displayProjects(projects) {
+            const tableBody = document
+                .getElementById("projectTable")
+                .getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = ""; // Clear previous data
+
+            projects.forEach((project) => {
+                const row = document.createElement("tr");
+
+                // Create columns for each project
+                row.innerHTML = `
+                    <td>${project.name}</td>
+                    <td>${project.description}</td>
+                    <td>${formatDate(project.start_date)}</td>
+                    <td>${formatDate(project.end_date)}</td>
+                    <td>${project.status}</td>
+                    <td>${project.completion}%</td>
+                    <td>${project.lecturers
+                        .map((lecturer) => lecturer.name)
+                        .join(", ")}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to get today's date
+        function getToday() {
+            return new Date().toISOString().split("T")[0];
+        }
+
+        // Function to get yesterday's date
+        function getYesterday() {
+            const date = new Date();
+            date.setDate(date.getDate() - 1);
+            return date.toISOString().split("T")[0];
+        }
+
+        // Function to get the start of this week
+        function getStartOfWeek() {
+            const date = new Date();
+            const day = date.getDay();
+            date.setDate(date.getDate() - day);
+            return date.toISOString().split("T")[0];
+        }
+
+        // Function to get the start of this month
+        function getStartOfMonth() {
+            const date = new Date();
+            date.setDate(1); // Set the date to 1
+            return date.toISOString().split("T")[0];
+        }
+
+        // Function to filter projects by date range
+        function filterProjectsByDateRange(startDate, endDate) {
+            fetchProjects().then((projects) => {
+                const filteredProjects = projects.filter((project) => {
+                    const start = new Date(project.start_date);
+                    const end = new Date(project.end_date);
+                    return (
+                        start >= new Date(startDate) && end <= new Date(endDate)
+                    );
+                });
+                displayProjects(filteredProjects);
+            });
+        }
+
+        // "Today" button
+        document
+            .getElementById("todayBtn")
+            .addEventListener("click", function () {
+                const today = getToday();
+                filterProjectsByDateRange(today, today);
+            });
+
+        // "Yesterday" button
+        document
+            .getElementById("yesterdayBtn")
+            .addEventListener("click", function () {
+                const yesterday = getYesterday();
+                filterProjectsByDateRange(yesterday, yesterday);
+            });
+
+        // "This Week" button
+        document
+            .getElementById("thisWeekBtn")
+            .addEventListener("click", function () {
+                const startOfWeek = getStartOfWeek();
+                const today = getToday();
+                filterProjectsByDateRange(startOfWeek, today);
+            });
+
+        // "This Month" button
+        document
+            .getElementById("thisMonthBtn")
+            .addEventListener("click", function () {
+                const startOfMonth = getStartOfMonth();
+                const today = getToday();
+                filterProjectsByDateRange(startOfMonth, today);
+            });
+
+        // "Custom" button
+        document
+            .getElementById("customBtn")
+            .addEventListener("click", function () {
+                document.getElementById("customDateRange").style.display =
+                    "block";
+            });
+
+        // "Apply Custom Range" button
+        document
+            .getElementById("applyCustomRange")
+            .addEventListener("click", function () {
+                const startDate = document.getElementById("startDate").value;
+                const endDate = document.getElementById("endDate").value;
+
+                if (startDate && endDate) {
+                    filterProjectsByDateRange(startDate, endDate);
+                }
+                document.getElementById("customDateRange").style.display =
+                    "none";
+            });
+
+        // Display all projects when the page loads
+        fetchProjects().then((projects) => {
+            displayProjects(projects);
+        });
+    </script>
 </html>

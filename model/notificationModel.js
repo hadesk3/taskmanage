@@ -5,16 +5,17 @@ const alertSchema = new Schema({
     task_id: { type: Schema.Types.ObjectId, ref: "Task", required: true },
     alert_type: {
         type: String,
-        enum: ["Deadline", "Overdue", "Extend"],
+        enum: ["Deadline", "Refuse", "Extend", "Assign"],
         default: "Deadline",
     },
     reason: { type: String },
     date_extend: { type: Date },
-    sent_to: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Admin nhận thông báo
+    sent_to: [{ type: Schema.Types.ObjectId, ref: "User" }],
     timestamp: { type: Date, default: Date.now },
     isRead: { type: Boolean, default: false },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     proof: { type: String },
+    project_id: { type: Schema.Types.ObjectId, ref: "Project" },
 });
 
 const Alert = mongoose.model("Alert", alertSchema);
