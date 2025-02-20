@@ -141,6 +141,7 @@ export const deleteProject = async (req, res) => {
         console.log(_id);
 
         const result = await Project.findByIdAndDelete(_id);
+        // await Notification.findByIdAndDelete({ project_id: _id });
         if (!result) {
             return res.json(pakage(1, "Can not delete project", null));
         }

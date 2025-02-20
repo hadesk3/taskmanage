@@ -20,10 +20,10 @@ import userRouter from "./router/userRoute.js";
 import notificationRouter from "./router/notificationRouter.js";
 import { checkToken, getUser } from "./middlewares/auth.js";
 import Notification from "./model/notificationModel.js";
-import { uploadFile } from "./config/googleDrive.js";
 import dotenv from "dotenv";
 import http from "http";
 import { Server } from "socket.io"; // Sử dụng cú pháp import đúng với ES Modules
+import { name } from "ejs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -148,25 +148,30 @@ io.on("connection", (socket) => {
 
     // Admin gửi thông báo đến user cụ thể
     socket.on("add-user-project", async (data) => {
-        const { user, message, projectId } = data;
+        const { users, message, projectId } = data;
+        console.log(data);
 
-        const newAlert = new Alert({
+        const newAlert = new Notification({
             alert_type: "Assign",
             reason: message,
-            sent_to: user._id, // Gửi đến user cụ thể
-            user: ADMIN_ID, // Admin là người gửi
+            sent_to: users.map((user) => user._id),
+            user: ADMIN_ID,
             project_id: projectId,
         });
 
         await newAlert.save();
 
         // Gửi thông báo cho user nếu họ online
-        if (onlineUsers.has(user._id)) {
-            io.to(onlineUsers.get(user._id)).emit(
-                "receive-notification",
-                newAlert
-            );
-        }
+        users.forEach((user) => {
+            if (onlineUsers.has(user._id)) {
+                io.to(onlineUsers.get(user._id)).emit("receiveNotification", {
+                    project_id: { projectId, name: data.projectName },
+                    user: user,
+                    reason: message,
+                    timestamp: newAlert.timestamp,
+                });
+            }
+        });
     });
 
     // Xóa user khỏi danh sách khi ngắt kết nối

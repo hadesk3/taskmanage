@@ -22,7 +22,8 @@ export const getNotifications = async (req, res) => {
             .limit(20)
             .populate("task_id", "title description") // Lấy thông tin về tên và mô tả nhiệm vụ
             .populate("user", "name avatar") // Lấy thông tin người gửi
-            .populate("sent_to", "name avatar"); // Lấy thông tin người nhận
+            .populate("sent_to", "name avatar") // Lấy thông tin người nhận
+            .populate("project_id", "name");
 
         res.status(200).json({ success: true, notifications });
     } catch (error) {
@@ -42,7 +43,8 @@ export const getNotificationById = async (req, res) => {
                 },
             })
             .populate("user", "name avatar") // Lấy thông tin người tạo alert
-            .populate("sent_to", "name email"); // Lấy thông tin admin nhận alert
+            .populate("sent_to", "name email") // Lấy thông tin admin nhận alert
+            .populate("project_id", "name");
 
         // Định dạng lại dữ liệu để dễ đọc
         const formattedAlerts = alerts.map((alert) => ({
@@ -65,6 +67,12 @@ export const getNotificationById = async (req, res) => {
                                 name: alert.task_id.project_id.name,
                             }
                           : null,
+                  }
+                : null,
+            project: alert.project_id
+                ? {
+                      _id: alert.project_id._id,
+                      name: alert.project_id.name,
                   }
                 : null,
         }));

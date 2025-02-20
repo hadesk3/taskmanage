@@ -643,7 +643,14 @@
                     (option) => option.value
                 );
 
-                console.log(members);
+                const nameMembers = Array.from(
+                    selectElement.selectedOptions
+                ).map((option) => option.text);
+
+                const users = members.map((id, index) => ({
+                    _id: id,
+                    name: nameMembers[index],
+                }));
 
                 const url = `${window.location.origin}/api/projects`;
                 fetch(url, {
@@ -664,6 +671,12 @@
                         if (data.code === 0) {
                             hideLoading();
                             $("#new-project-modal").modal("hide");
+                            socket.emit("add-user-project", {
+                                users,
+
+                                message: `You have been added to project ${name}`,
+                                projectId: data.data._id,
+                            });
                             init();
                             clearInput();
                         }

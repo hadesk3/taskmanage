@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function
 
 const Schema = mongoose.Schema;
 

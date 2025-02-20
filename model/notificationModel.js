@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const alertSchema = new Schema({
-    task_id: { type: Schema.Types.ObjectId, ref: "Task", required: true },
+    task_id: { type: Schema.Types.ObjectId, ref: "Task" },
     alert_type: {
         type: String,
         enum: ["Deadline", "Refuse", "Extend", "Assign"],

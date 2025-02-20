@@ -322,30 +322,55 @@
             parseInt(notificationCount.innerText) + notifications.length;
 
         notifications.forEach((noti) => {
-            const item = `
-            <a href="${window.location.origin}/notification/${noti._id}" class="iq-sub-card">
-                <div class="media align-items-center cust-card py-3 border-bottom">
-                    <div class="">
-                        <img class="avatar-50 rounded-small" src="${noti.user.avatar || "/images/user/default-avatar.png"}" alt="User" />
-                    </div>
-                    <div class="media-body ml-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0">${
-                                "Extend time"
-                            }</h6>
-                            <small class="text-dark"><b>${new Date(noti.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</b></small>
+            console.log(noti);
+            let item = '';
+            if (noti.alert_type === 'Extend') {
+                item = `
+                    <a href="${window.location.origin}/notification/${noti._id}" class="iq-sub-card">
+                        <div class="media align-items-center cust-card py-3 border-bottom">
+                            <div class="">
+                                <img class="avatar-50 rounded-small" src="${noti.user.avatar || "/images/user/default-avatar.png"}" alt="User" />
+                            </div>
+                            <div class="media-body ml-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">${
+                                        "Extend time"
+                                    }</h6>
+                                    <small class="text-dark"><b>${new Date(noti.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</b></small>
 
+                                </div>
+                                <small class="mb-0">
+                                    <b>Reason:</b> ${ noti.reason || "No reason provided" }<br>
+                                    <b>New Deadline:</b> ${ new Date(noti.date_extend).toLocaleDateString() }<br>
+                                    <b>Task:</b> ${ noti.task_id.title } <br>
+                                </small>
+                            </div>
                         </div>
-                        <small class="mb-0">
-                            <b>Reason:</b> ${ noti.reason || "No reason provided" }<br>
-                            <b>New Deadline:</b> ${ new Date(noti.date_extend).toLocaleDateString() }<br>
-                            <b>Task:</b> ${ noti.task_id.title } <br>
-                        </small>
-                    </div>
-                </div>
-            </a>
-        `;
+                    </a>
+                `;
+            } else if (noti.alert_type === 'Assign') {
+                item = `
+                    <a href="${window.location.origin}/task/${noti.project_id._id}" class="iq-sub-card">
+                        <div class="media align-items-center cust-card py-3 border-bottom">
+                            <div class="">
+                                <img class="avatar-50 rounded-small" src="${noti.user.avatar || "/images/user/default-avatar.png"}" alt="User" />
+                            </div>
+                            <div class="media-body ml-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">${
+                                        "Assign task"
+                                    }</h6>
+                                    <small class="text-dark"><b>${new Date(noti.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</b></small>
 
+                                </div>
+                                <small class="mb-0">
+                                    <b>You have been assign to project:</b> ${ noti.project_id.name } <br>
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }
             if (prepend) {
                 notificationList.insertAdjacentHTML("afterbegin", item); // Thêm vào đầu danh sách
             } else {

@@ -32,6 +32,7 @@ export const getUser = async (req, res, next) => {
             let userData = await User.findOne({
                 username: decoded.data.username,
             });
+            userData.password = undefined;
             req.user = userData;
             res.locals.user = userData;
         } catch (error) {
