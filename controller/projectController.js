@@ -1,6 +1,7 @@
 import Project from "../model/ProjectModel.js";
 import Task from "../model/TaskModel.js";
 import ProjectUser from "../model/ProjectUserModel.js";
+import Notification from "../model/notificationModel.js";
 import pakage from "../middlewares/pakage.js";
 
 import { Parser } from "json2csv";
@@ -138,10 +139,11 @@ export const updateProject = async (req, res) => {
 export const deleteProject = async (req, res) => {
     try {
         const _id = req.params.id;
-        console.log(_id);
 
+        await Notification.deleteMany({ project_id: _id });
+
+        // Xóa project
         const result = await Project.findByIdAndDelete(_id);
-        // await Notification.findByIdAndDelete({ project_id: _id });
         if (!result) {
             return res.json(pakage(1, "Can not delete project", null));
         }

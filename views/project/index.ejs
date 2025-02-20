@@ -673,9 +673,9 @@
                             $("#new-project-modal").modal("hide");
                             socket.emit("add-user-project", {
                                 users,
-
                                 message: `You have been added to project ${name}`,
                                 projectId: data.data._id,
+                                projectName: name,
                             });
                             init();
                             clearInput();
