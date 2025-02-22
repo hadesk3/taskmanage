@@ -77,7 +77,7 @@
                                                         </div>
                                                         <div class="col-lg-12">
                                                             <div
-                                                                class="floating-label form-group"
+                                                                class="floating-label form-group position-relative"
                                                             >
                                                                 <input
                                                                     class="floating-input form-control"
@@ -89,24 +89,38 @@
                                                                 <label
                                                                     >Password</label
                                                                 >
+                                                                <span
+                                                                    class="toggle-password"
+                                                                    onclick="togglePassword()"
+                                                                >
+                                                                    👁️
+                                                                </span>
                                                             </div>
                                                         </div>
+
+                                                        <style>
+                                                            .position-relative {
+                                                                position: relative;
+                                                            }
+                                                            .toggle-password {
+                                                                position: absolute;
+                                                                right: 10px;
+                                                                top: 50%;
+                                                                transform: translateY(
+                                                                    -50%
+                                                                );
+                                                                cursor: pointer;
+                                                                font-size: 18px;
+                                                            }
+                                                        </style>
+
                                                         <div class="col-lg-6">
-                                                            <div
-                                                                class="custom-control custom-checkbox mb-3"
+                                                            <button
+                                                                type="submit"
+                                                                class="btn btn-white"
                                                             >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    class="custom-control-input"
-                                                                    id="customCheck1"
-                                                                />
-                                                                <label
-                                                                    class="custom-control-label control-label-1 text-white"
-                                                                    for="customCheck1"
-                                                                    >Remember
-                                                                    Me</label
-                                                                >
-                                                            </div>
+                                                                Sign In
+                                                            </button>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <a
@@ -117,12 +131,6 @@
                                                             >
                                                         </div>
                                                     </div>
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-white"
-                                                    >
-                                                        Sign In
-                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
@@ -150,6 +158,18 @@
                     login();
                 }
             });
+
+            function togglePassword() {
+                let passwordField = document.getElementById("password");
+                let icon = document.querySelector(".toggle-password");
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    icon.textContent = "🙈"; // Đổi icon khi hiện mật khẩu
+                } else {
+                    passwordField.type = "password";
+                    icon.textContent = "👁️"; // Đổi icon khi ẩn mật khẩu
+                }
+            }
 
             async function login(event) {
                 if (event) event.preventDefault();

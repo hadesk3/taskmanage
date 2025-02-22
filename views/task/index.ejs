@@ -1031,7 +1031,7 @@
         let sender = {};
         let adminId = "";
         function getTasks() {
-            fetch(`http://localhost:3000/api/tasks/${id}`, {
+            fetch(`${window.location.origin}/api/tasks/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -1090,7 +1090,7 @@
         function do_delete() {
             displayLoading();
             const taskId = document.getElementById("delid").value;
-            fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+            fetch(`${window.location.origin}/api/tasks/${taskId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -1147,7 +1147,7 @@
                 formData.append("file", file);
             }
 
-            fetch("http://localhost:3000/api/tasks", {
+            fetch(`${window.location.origin}/api/tasks`, {
                 method: "POST",
                 body: formData, // Không cần đặt "Content-Type", trình duyệt sẽ tự động xử lý
             })
@@ -1246,7 +1246,7 @@
                     checkList: checklistObjects,
                     attachments,
                 };
-                fetch(`http://localhost:3000/api/tasks/${id}`, {
+                fetch(`${window.location.origin}/api/tasks/${id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -1298,7 +1298,7 @@
                 status: newStatus === "Done", // Nếu task hoàn thành, đánh dấu checklist là true
             }));
 
-            fetch(`http://localhost:3000/api/tasks/${id}`, {
+            fetch(`${window.location.origin}/api/tasks/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -1328,7 +1328,7 @@
 
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/tasks/${taskId}`,
+                    `${window.location.origin}/api/tasks/${taskId}`,
                     {
                         method: "PUT",
                         headers: {

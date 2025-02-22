@@ -130,6 +130,19 @@ export const updateProject = async (req, res) => {
         }
 
         const updatedProject = await project.save();
+
+        if (req.body.status === "Completed") {
+            await Task.updateMany(
+                { project_id: updatedProject._id },
+                { $set: { status: "Done" } }
+            );
+        } else {
+            await Task.updateMany(
+                { project_id: updatedProject._id },
+                { $set: { status: "In Progress" } }
+            );
+        }
+
         res.json(pakage(0, "Update project successfully!", updatedProject));
     } catch (err) {
         res.json(pakage(1, "Internal server error!", err.message));

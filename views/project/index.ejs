@@ -67,10 +67,7 @@
                                                         <span class="h6"
                                                             >Status :</span
                                                         >
-                                                        <span
-                                                            id="selectedFilter"
-                                                            >All</span
-                                                        >
+
                                                         <i
                                                             class="ri-arrow-down-s-line ml-2 mr-0"
                                                         ></i>
@@ -423,6 +420,59 @@
         </div>
         <!-- End Confirm delete -->
 
+        <!-- Confirm change status -->
+        <div
+            class="modal fade"
+            id="changeStatusModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">
+                            Make as done
+                        </h4>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Do you want to make as done project
+                        <strong id="statusName"></strong>? , all task wil be
+                        make as done!.
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            onclick="do_changeStatus()"
+                        >
+                            Confirm
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-dark"
+                            data-dismiss="modal"
+                        >
+                            Cancle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Confirm change status -->
+
         <!-- script manage project -->
         <script>
             // show loading
@@ -439,7 +489,12 @@
                 const statusButton = document.querySelector(
                     ".status-dropdown .btn span.h6"
                 );
-                let selectedStatus = "In Progress"; // Trạng thái mặc định
+
+                let selectedStatus = "All"; // Trạng thái mặc định là "All"
+
+                // Cập nhật giao diện khi trang tải xong
+                statusButton.textContent = `Status: ${selectedStatus}`;
+                filterProjectsByStatus(selectedStatus);
 
                 // Xử lý sự kiện click vào mỗi mục trong dropdown
                 statusDropdownItems.forEach((item) => {
@@ -492,7 +547,6 @@
                 if (addUserSelect) {
                     addUserSelect.innerHTML = html;
 
-                    // Nếu sử dụng Bootstrap selectpicker
                     $("#addUser").selectpicker("refresh");
                 } else {
                     console.error("Element with id 'addUser' not found!");
@@ -510,11 +564,16 @@
                                 lecturer.avatar ||
                                 "/images/user/default-avatar.png";
                             return `
-                <div class="iq-media text-center">
-                    <img class="img-fluid avatar-40 rounded-circle" src="${avatar}" alt="${lecturer.name}">
-                </div>`;
+                                <div class="iq-media text-center">
+                                    <img class="img-fluid avatar-40 rounded-circle" src="${avatar}" alt="${lecturer.name}">
+                                </div>`;
                         })
                         .join("");
+
+                    const starCheck =
+                        project.status === "Completed"
+                            ? "ri-checkbox-circle-fill m-0 text-success"
+                            : "ri-checkbox-circle-fill m-0";
 
                     const adminActions =
                         user && user.role === "headofsubject"
@@ -546,14 +605,14 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between mb-4">
                                         <div
-                                            id="circle-progress-6"
+                                            id="circle-progress-01"
                                             class="circle-progress-01 circle-progress circle-progress-primary"
                                             data-min-value="0"
                                             data-max-value="100"
                                             data-value="${project.completion}"
                                             data-type="percent"
                                         ></div>
-                                        <i class="ri-star-fill m-0 text-warning"></i>
+                                        <i class="${starCheck}" style="cursor: pointer;" onclick="changeStatus(event, '${project._id}');"></i>
                                     </div>
                                     <h5 class="mb-1">${project.name}</h5>
                                     <p class="mb-3">${project.description}</p>
@@ -569,7 +628,44 @@
                 });
 
                 accountBody.innerHTML = html;
+                setTimeout(drawCircleProgress, 100); // Vẽ lại progress sau khi HTML cập nhật
             };
+
+            function drawCircleProgress() {
+                document
+                    .querySelectorAll(".circle-progress-01")
+                    .forEach((el) => {
+                        let value = el.dataset.value; // Lấy giá trị từ data-value (0-100)
+                        let radius = 47; // Bán kính vòng tròn
+                        let circumference = 2 * Math.PI * radius; // Chu vi vòng tròn
+                        let offset =
+                            circumference - (value / 100) * circumference; // Độ dài đường bị ẩn
+
+                        let svg = `
+                            <svg version="1.1" width="100" height="100" viewBox="0 0 100 100" class="circle-progress">
+                                <circle class="circle-progress-circle" cx="50" cy="50" r="${radius}" fill="none" stroke="#ddd" stroke-width="8"></circle>
+                                <circle class="circle-progress-value" cx="50" cy="50" r="${radius}" fill="none" stroke="#00E699" stroke-width="8"
+                                    stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}"
+                                    transform="rotate(-90 50 50)" stroke-linecap="round">
+                                </circle>
+                                <text class="circle-progress-text" x="50" y="50" font="16px Arial, sans-serif" text-anchor="middle" fill="#999" dy="0.4em">
+                                    ${value}%
+                                </text>
+                            </svg>`;
+
+                        el.innerHTML = svg; // Gán lại SVG vào phần tử
+
+                        // Hiệu ứng animation
+                        setTimeout(() => {
+                            let circle = el.querySelector(
+                                ".circle-progress-value"
+                            );
+                            circle.style.transition =
+                                "stroke-dashoffset 1.5s ease-in-out";
+                            circle.style.strokeDashoffset = offset;
+                        }, 100);
+                    });
+            }
 
             const getProjects = async () => {
                 showLoading();
@@ -622,6 +718,47 @@
                     .catch((error) => {
                         hideLoading();
                         $("#exampleModal").modal("hide");
+                        console.log(error);
+                    });
+            }
+
+            // CHANGE STATUS
+            function changeStatus(event, id) {
+                event.stopPropagation(); // Ngăn chặn sự kiện lan truyền lên thẻ cha
+
+                const project = listProject.find((p) => p._id === id);
+                if (project.status === "Completed") {
+                    return;
+                }
+                document.getElementById("statusName").innerText = project.name;
+                document.getElementById("delid").value = id;
+                $("#changeStatusModal").modal("show");
+            }
+
+            function do_changeStatus() {
+                showLoading();
+                const id = document.getElementById("delid").value;
+                const url = `${window.location.origin}/api/projects/${id}`;
+                fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        status: "Completed",
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.code === 0) {
+                            hideLoading();
+                            $("#changeStatusModal").modal("hide");
+                            init();
+                        }
+                    })
+                    .catch((error) => {
+                        hideLoading();
+                        $("#changeStatusModal").modal("hide");
                         console.log(error);
                     });
             }

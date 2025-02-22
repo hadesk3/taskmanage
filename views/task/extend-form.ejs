@@ -192,7 +192,7 @@
                     deadline: dateExtend,
                 };
 
-                fetch(`http://localhost:3000/api/tasks/${task._id}`, {
+                fetch(`${window.location.origin}/api/tasks/${task._id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

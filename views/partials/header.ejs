@@ -285,7 +285,7 @@
     </body>
 </html>
 <script>
-    const socket = io("http://localhost:3000");
+    const socket = io(window.location.origin);
 
     const userData = <%- JSON.stringify(user) %>;
 
@@ -320,7 +320,6 @@
             parseInt(notificationCount.innerText) + notifications.length;
 
         notifications.forEach((noti) => {
-            console.log(noti);
             let item = '';
             if (noti.alert_type === 'Extend') {
                 item = `

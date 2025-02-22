@@ -67,15 +67,14 @@
                                                         <div
                                                             class="form-group mb-0"
                                                         >
-                                                        <input
-                                                        type="search"
-                                                        class="form-control"
-                                                        id="exampleInputSearch"
-                                                        placeholder="Search"
-                                                        aria-controls="user-list-table"
-                                                        onkeyup="search()"
-                                                    />
-                                                    
+                                                            <input
+                                                                type="search"
+                                                                class="form-control"
+                                                                id="exampleInputSearch"
+                                                                placeholder="Search"
+                                                                aria-controls="user-list-table"
+                                                                onkeyup="search()"
+                                                            />
                                                         </div>
                                                     </form>
                                                 </div>
@@ -107,7 +106,6 @@
                                                     <th>Contact</th>
                                                     <th>Email</th>
                                                     <th>Adress</th>
-                                                    <th>Status</th>
                                                     <!-- <th>Company</th> -->
                                                     <th>Join Date</th>
                                                     <th
@@ -119,70 +117,6 @@
                                             </thead>
                                             <tbody></tbody>
                                         </table>
-                                    </div>
-                                    <div
-                                        class="row justify-content-between mt-3"
-                                    >
-                                        <div
-                                            id="user-list-page-info"
-                                            class="col-md-6"
-                                        >
-                                            <span
-                                                >Showing 1 to 5 of 5
-                                                entries</span
-                                            >
-                                        </div>
-                                        <div class="col-md-6">
-                                            <nav
-                                                aria-label="Page navigation example"
-                                            >
-                                                <ul
-                                                    class="pagination justify-content-end mb-0"
-                                                >
-                                                    <li
-                                                        class="page-item disabled"
-                                                    >
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            tabindex="-1"
-                                                            aria-disabled="true"
-                                                            >Previous</a
-                                                        >
-                                                    </li>
-                                                    <li
-                                                        class="page-item active"
-                                                    >
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >1</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >2</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >3</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >Next</a
-                                                        >
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -528,13 +462,15 @@
     </body>
 
     <script>
-      function search() {
-    const searchInput = document.getElementById("exampleInputSearch").value.toLowerCase();
-    const filteredAccounts = listAccount.filter(account =>
-        account.name.toLowerCase().includes(searchInput)
-    );
-    render(filteredAccounts);
-}
+        function search() {
+            const searchInput = document
+                .getElementById("exampleInputSearch")
+                .value.toLowerCase();
+            const filteredAccounts = listAccount.filter((account) =>
+                account.name.toLowerCase().includes(searchInput)
+            );
+            render(filteredAccounts);
+        }
 
         // action loading
         function showLoading() {
@@ -571,40 +507,6 @@
                         ${account.email}
                     </td>
                     <td>${account.address}</td>
-                   <td>
-                        <div
-                            class="custom-control custom-switch custom-switch-text custom-control-inline"
-                        >
-                            <div class="custom-switch-inner">
-                                <p class="mb-0">${
-                                    account.status === "active"
-                                        ? "Active"
-                                        : "Inactive"
-                                }</p>
-                                <input
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                    id="customSwitch-${account._id}"
-                                    ${
-                                        account.status === "active"
-                                            ? "checked"
-                                            : ""
-                                    }
-                                    onchange="toggleAccountStatus('${
-                                        account._id
-                                    }', this.checked)"
-                                />
-                                <label
-                                    class="custom-control-label"
-                                    for="customSwitch-${account._id}"
-                                    data-on-label="ON"
-                                    data-off-label="OFF"
-                                >
-                                </label>
-                            </div>
-                        </div>
-                    </td>
-
                     <td>${createdDate}</td>
                     <td>
                         <div
@@ -628,9 +530,7 @@
                                 data-placement="top"
                                 title="edit"
                                 data-original-title="Edit"
-                                onclick="edit_account('${index}', '${
-                    account._id
-                }')"
+                                onclick="edit_account('${index}', '${account._id}')"
                                 ><i
                                     class="ri-pencil-line mr-0"
                                 ></i
@@ -809,5 +709,28 @@
                 hideLoading();
             }
         }
+
+        const toggleAccountStatus = async (accountId, isChecked) => {
+            try {
+                const newStatus = isChecked ? "active" : "inactive";
+
+                // Cập nhật dữ liệu trên server
+                await fetch(`/updateStatus/${accountId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+
+                // Cập nhật dữ liệu trong biến accounts
+                accounts = accounts.map((acc) =>
+                    acc._id === accountId ? { ...acc, status: newStatus } : acc
+                );
+
+                // Render lại danh sách với dữ liệu mới
+                render(accounts);
+            } catch (error) {
+                console.error("Error updating status:", error);
+            }
+        };
     </script>
 </html>
