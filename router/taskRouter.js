@@ -18,7 +18,7 @@ const upload = multer({ dest: "uploads/" });
 router.get("/tasks/:id", getAllTasks);
 router.get("/tasks/:id", getTaskById);
 router.post("/tasks", upload.single("file"), createTask);
-router.put("/tasks/:id", updateTask);
+router.put("/tasks/:id", upload.single("fileSubmit"), updateTask);
 router.delete("/tasks/:id", deleteTask);
 router.get("/tasks/filter", filterTasksByStatus);
 router.get("/tasks/search", searchTasksByTitle);

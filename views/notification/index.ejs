@@ -357,7 +357,11 @@
                 const notificationButton = document.createElement("a");
                 notificationButton.classList.add("btn", "btn-light");
                 notificationButton.innerText = "Details";
-                notificationButton.href = `/notification/${notification._id}`;
+                if (notification.alert_type === "Extend") {
+                    notificationButton.href = `/notification/${notification._id}`;
+                } else if (notification.alert_type === "Assign") {
+                    notificationButton.href = `${window.location.origin}/task/${notification.project_id._id}`;
+                }
 
                 notificationText.appendChild(notificationTitle);
                 notificationText.appendChild(notificationDescription);

@@ -1,4 +1,5 @@
 import Task from "../model/TaskModel.js";
+import Project from "../model/ProjectModel.js";
 import Checklist from "../model/CheckListModel.js";
 import pakage from "../middlewares/pakage.js";
 import { uploadFile } from "../config/googleDrive.js";
@@ -21,6 +22,16 @@ export const getAllTasks = async (req, res) => {
                 .json(pakage(1, "Project ID is required!", null));
         }
 
+        // Truy vấn project để lấy end_date
+        const project = await Project.findById(projectId).select({
+            name: 1,
+            end_date: 1,
+        });
+
+        if (!project) {
+            return res.status(404).json(pakage(1, "Project not found!", null));
+        }
+
         // Truy vấn task theo project_id
         const tasks = await Task.find({ project_id: projectId }).populate({
             path: "assigned_to", // Populate assigned_to
@@ -37,6 +48,7 @@ export const getAllTasks = async (req, res) => {
         return res.json(
             pakage(0, "Get tasks successfully!", {
                 tasks,
+                project: project,
                 user: req.user,
                 ADMIN_ID,
             })
@@ -90,6 +102,14 @@ export const updateTask = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
         const { checkListIndex, status } = req.body;
+        let fileLink = null;
+
+        console.log("req.file", req.file);
+
+        if (req.file) {
+            fileLink = await uploadFile(req.file.path);
+            task.proofDone = fileLink;
+        }
 
         if (!task) {
             return res.json({
@@ -104,6 +124,8 @@ export const updateTask = async (req, res) => {
         if (req.body.description) task.description = req.body.description;
         if (req.body.deadline) task.deadline = req.body.deadline;
         if (req.body.status) task.status = req.body.status;
+        if (req.body.media) task.media = req.body.media;
+        if (req.body.checkList) task.checkList = req.body.checkList;
 
         // Nếu trạng thái thay đổi, cập nhật toàn bộ checklist
         if (status === "Done") {

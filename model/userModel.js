@@ -49,6 +49,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    major: {
+        type: String,
+        enum: ["software_enginerr", "computer_science", "CNnDC"],
+    },
     createdAt: {
         type: String,
         require: true,

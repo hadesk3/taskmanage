@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import moment from "moment";
 
 export const register = async (req, res) => {
-    const { name, email, phone, address, avatar } = req.body;
+    const { name, email, phone, address, avatar, major } = req.body;
     const username = email.split("@")[0];
 
     const checkEmailExist = await User.find({ email: email });
@@ -28,6 +28,7 @@ export const register = async (req, res) => {
         role: "lecturer",
         status: "active",
         phone: phone,
+        major: major,
         address: address,
         avatar: avatar,
         createdAt: moment().format("MM/DD/YYYY, hh:mm:ss"),

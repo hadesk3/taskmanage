@@ -52,6 +52,29 @@
                                         >
                                             Your Projects
                                         </h5>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div
+                                                id="user_list_datatable_info"
+                                                class="dataTables_filter"
+                                            >
+                                                <form
+                                                    class="mr-3 position-relative"
+                                                >
+                                                    <div
+                                                        class="form-group mb-0"
+                                                    >
+                                                        <input
+                                                            type="search"
+                                                            class="form-control"
+                                                            id="exampleInputSearch"
+                                                            placeholder="Search"
+                                                            aria-controls="user-list-table"
+                                                            onkeyup="search()"
+                                                        />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                         <div
                                             class="d-flex flex-wrap align-items-center justify-content-between"
                                         >
@@ -181,25 +204,8 @@
                                     ></textarea>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label for="exampleInputText2" class="h5"
-                                        >Categories *</label
-                                    >
-                                    <select
-                                        name="type"
-                                        class="selectpicker form-control"
-                                        data-style="py-0"
-                                    >
-                                        <option>Category</option>
-                                        <option>Android</option>
-                                        <option>IOS</option>
-                                        <option>Ui/Ux Design</option>
-                                        <option>Development</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
+
+                            <div class="col-lg-12">
                                 <div class="form-group mb-3">
                                     <label for="exampleInputText004" class="h5"
                                         >Due Dates*</label
@@ -475,6 +481,16 @@
 
         <!-- script manage project -->
         <script>
+            // Search
+            function search() {
+                const searchInput = document
+                    .getElementById("exampleInputSearch")
+                    .value.toLowerCase();
+                const filteredAccounts = listProject.filter((project) =>
+                    project.name.toLowerCase().includes(searchInput)
+                );
+                render(filteredAccounts);
+            }
             // show loading
             function showLoading() {
                 document.getElementById("loading").style.display = "block";
@@ -483,6 +499,16 @@
                 document.getElementById("loading").style.display = "none";
             }
             document.addEventListener("DOMContentLoaded", function () {
+                const today = new Date().toISOString().split("T")[0]; // Lấy ngày hiện tại theo format YYYY-MM-DD
+                document.getElementById("exampleInputText004").value = today;
+                document
+                    .getElementById("exampleInputText004")
+                    .setAttribute("min", today);
+                document.getElementById("editEndDate").value = today;
+                document
+                    .getElementById("editEndDate")
+                    .setAttribute("min", today);
+
                 const statusDropdownItems = document.querySelectorAll(
                     ".status-dropdown .dropdown-item"
                 );
@@ -600,7 +626,9 @@
                                 </div>`;
 
                     html += `
-                        <div class="col-lg-4 col-md-6" onclick="redirectPage('${project._id}');">
+                        <div class="col-lg-4 col-md-6" onclick="redirectPage('${
+                            project._id
+                        }');">
                             <div class="card card-block card-stretch card-height">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -612,7 +640,11 @@
                                             data-value="${project.completion}"
                                             data-type="percent"
                                         ></div>
-                                        <i class="${starCheck}" style="cursor: pointer;" onclick="changeStatus(event, '${project._id}');"></i>
+                                        ${
+                                            userData.role === "headofsubject"
+                                                ? `<i class="${starCheck}" style="cursor: pointer;" onclick="changeStatus(event, '${project._id}');"></i>`
+                                                : ""
+                                        }
                                     </div>
                                     <h5 class="mb-1">${project.name}</h5>
                                     <p class="mb-3">${project.description}</p>
@@ -924,10 +956,6 @@
             function redirectPage(id) {
                 let members = listProject.find((p) => p._id === id).lecturers;
                 localStorage.setItem("listUser", JSON.stringify(members));
-                localStorage.setItem(
-                    "projectName",
-                    listProject.find((p) => p._id === id).name
-                );
                 window.location.href = `/task/${id}`;
             }
         </script>

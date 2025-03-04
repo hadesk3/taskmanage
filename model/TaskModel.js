@@ -28,6 +28,10 @@ const taskSchema = new Schema({
         type: String,
         default: "",
     },
+    proofDone: {
+        type: String,
+        default: "",
+    },
 });
 const Task = mongoose.model("Task", taskSchema);
 
